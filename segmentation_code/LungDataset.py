@@ -1,5 +1,6 @@
 import torch.utils.data as data_utils
 import numpy as np
+import torch
 
 
 class Dataset(data_utils.Dataset):
@@ -26,7 +27,7 @@ class Dataset(data_utils.Dataset):
         if self.x_min and self.x_max:
             x = (x-self.x_min)/(self.x_max-self.x_min)
 
-        return x, y
+        return torch.tensor(x), torch.tensor(y)
     
     def get_minmax(self):
 
