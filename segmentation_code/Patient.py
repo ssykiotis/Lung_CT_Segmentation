@@ -2,15 +2,19 @@ import os
 import numpy   as np
 import pydicom as pdcm
 import pydicom_seg
+import numpy as np
 
 from pydicom.pixel_data_handlers.util import apply_modality_lut
+from lungmask import mask
 
 class Patient:
 
-    def __init__(self,path):
+    def __init__(self,path,instance_seg = None):
         self.path = path
         self.images_loc = f'{self.path}/images/'
         self.seg_loc    = f'{self.path}/seg/'
+
+        self.lung_seg_model = instance_seg
 
         self.dcm_paths = self.parse_images()
         self.seg_path  = self.parse_segmentation()
@@ -100,7 +104,13 @@ class Patient:
             if 'Lung' in res.segment_infos[item].to_json_dict()['00620006']['Value'][0]:
                    lung_idxs.append(item) 
 
-        lung_seg   = res.segment_data(lung_idxs[0])+res.segment_data(lung_idxs[1])
+        if len(lung_idxs)>1:
+            lung_seg = res.segment_data(lung_idxs[0])+res.segment_data(lung_idxs[1])
+        elif len(lung_idxs)==1:
+            lung_seg = res.segment_data(lung_idxs[0]) 
+        else:
+            lung_seg = mask.apply(self.imgs.astype(np.float32), self.lung_seg_model, batch_size = 1)
+
         lung_seg[lung_seg!=0] = 1
 
         if self.metadata["orientation"] == 'HFS':

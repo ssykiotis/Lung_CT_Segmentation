@@ -3,8 +3,10 @@
 class Trainer:
 
     #TODO
-    def __init__(self,config):
-        pass
+    def __init__(self,config,ds_parser):
+        self.config = config
+
+
     
     #TODO
     def train_one_epoch(self):
