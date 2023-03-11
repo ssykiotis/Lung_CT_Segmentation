@@ -83,19 +83,19 @@ class DataParser:
         y = []
 
         if keeponly:
-            idxs_to_keep = np.where(pat.lesion_seg.sum(axis = (1,2)))
+            idxs_to_keep = np.where(pat.lesion_seg.sum(axis = (1,2)))[0]
         else:
             idxs_to_keep = list(range(pat.imgs.shape[0]))
 
         for idx in idxs_to_keep:
             max_values = np.amax(pat.lung_seg[idx])
             result = np.where(pat.lung_seg[idx] == max_values)
-            x1 = np.min(result[0])
-            x2 = np.max(result[0])
-            y1 = np.min(result[1])
-            y2 = np.max(result[1])
+            x1 = np.min(result[0]) - self.config["crop_buffer"]
+            x2 = np.max(result[0]) + self.config["crop_buffer"]
+            y1 = np.min(result[1]) - self.config["crop_buffer"]
+            y2 = np.max(result[1]) + self.config["crop_buffer"]
 
-            img_cropped = pat.imgs[x1:x2,y1:y2]
+            img_cropped = pat.imgs[idx,x1:x2,y1:y2]
             img_cropped = img_cropped.astype(np.float32)
 
             dim = (self.config["img_size"],self.config["img_size"])
@@ -106,21 +106,21 @@ class DataParser:
             
             img_resized = img_resized.astype(np.float16)
             
-            mask_cropped = pat.lesion_seg[x1:x2,y1:y2]
+            mask_cropped = pat.lesion_seg[idx,x1:x2,y1:y2]
             mask_cropped = mask_cropped.astype(np.float32)
 
             mask_resized = cv2.resize(mask_cropped,
                                       dsize = dim,
-                                      interpolation = cv2.INTER_CUBIC)
+                                      interpolation = cv2.INTER_NEAREST)
             
             mask_resized[mask_resized>0] = 1
             mask_resized = mask_resized.astype(np.int8)
 
-            x.append(img_resized)
-            y.append(mask_resized)
+            x.append(np.expand_dims(img_resized, axis = 0))
+            y.append(np.expand_dims(mask_resized,axis = 0))
 
-            x = np.concatenate(x, axis = 0)
-            y = np.concatenate(y, axis = 0)
+        x = np.concatenate(x, axis = 0)
+        y = np.concatenate(y, axis = 0)
 
         return x,y
 
@@ -163,7 +163,7 @@ class Dataset:
         if self.x_min and self.x_max:
             x = (x-self.x_min)/(self.x_max-self.x_min)
 
-        return x.to(self.config["device"]), y.to(self.config["device"])
+        return torch.tensor(x).to(self.config["device"]), torch.tensor(y).to(self.config["device"])
     
     def get_minmax(self):
 
