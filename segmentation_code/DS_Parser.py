@@ -1,8 +1,12 @@
 import os
 from Patient import *
+from LungDataset import *
 import random
 import cv2
 from lungmask import mask
+
+
+
 
 
 class DataParser:
@@ -14,7 +18,7 @@ class DataParser:
                               for file in sorted(os.listdir(config["data_location"]))\
                               if not file.startswith('.')]
         
-        self.patient_paths = self.patient_paths[:50]
+        self.patient_paths = self.patient_paths[:10]
         self.train_patients,self.val_patients,self.test_patients = self.train_test_split()
 
 
@@ -138,40 +142,5 @@ class DataParser:
 
         return training_patients,val_patients,test_patients
     
-
-class Dataset:
-
-    def __init__(self,config,x,y, x_min = None, x_max = None):
-
-        self.config = config
-
-        self.x = x
-        self.y = y
-
-        self.x_min = x_min
-        self.x_max = x_max
-
-
-    def __len__(self):
-        return self.x.shape[0]
-
-    def __getitem__(self,index):
-
-        x = self.x[index].copy()
-        y = self.y[index].copy()
-
-        if self.x_min and self.x_max:
-            x = (x-self.x_min)/(self.x_max-self.x_min)
-
-        return torch.tensor(x).to(self.config["device"]), torch.tensor(y).to(self.config["device"])
-    
-    def get_minmax(self):
-
-        x_min = np.min(self.x)
-        x_max = np.max(self.x)
-
-        return x_min,x_max
-
-
 
 

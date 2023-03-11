@@ -9,9 +9,6 @@ matplotlib.use('TkAgg')
 from DS_Parser import *
 from Trainer   import *
 
-#TODO: SET SEED
-
-
 def setup_seed(seed):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark     = False  
@@ -39,6 +36,6 @@ if __name__ == "__main__":
     train_dataset, val_dataset = ds_parser.get_dataset("train")
 
     
-    trainer   = Trainer(config,ds_parser)
+    trainer = Trainer(config,ds_parser)
 
 
