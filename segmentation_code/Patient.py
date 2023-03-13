@@ -19,9 +19,10 @@ class Patient:
         self.dcm_paths = self.parse_images()
         self.seg_path  = self.parse_segmentation()
 
-        self.metadata  = self.get_exam_metadata()
+        self.metadata    = self.get_exam_metadata()
+        self.imgs        = self.read_images()
+        self.image_names = self.get_image_names()
 
-        self.imgs = self.read_images()
         self.lung_seg,self.lesion_seg = self.read_segmentations()
 
     
@@ -53,7 +54,7 @@ class Patient:
         with open(self.dcm_paths[0],'rb') as f:
             dcm_obj = pdcm.dcmread(f)
 
-        metadata = {'vendor': (dcm_obj.Manufacturer).lower(),
+        metadata = {'vendor':      (dcm_obj.Manufacturer).lower(),
                     'orientation': dcm_obj.PatientPosition}
         return metadata
 
@@ -118,4 +119,11 @@ class Patient:
             lung_seg   = lung_seg[::-1,:,:]
 
         return lung_seg,lesion_seg
+    
+
+    def get_image_names(self):
+        patient_name = self.path.split('/')[-1]
+        image_names = [f'{patient_name}/{i+1}' for i in range(self.imgs.shape[0])]
+
+        return image_names
 
