@@ -5,15 +5,22 @@ import torch
 
 class Dataset(data_utils.Dataset):
 
-    def __init__(self,config,x,y, x_min = None, x_max = None):
+    def __init__(self, config, x, y, mode, lung_seg = None, img_names = None, x_min = None, x_max = None):
+
+        assert mode in ['train','val','test'], "Mode not supported"
 
         self.config = config
 
         self.x = x
         self.y = y
+        
+        self.lung_seg  = lung_seg
+        self.img_names = img_names
 
         self.x_min = x_min if x_min else np.min(self.x)
         self.x_max = x_max if x_max else np.max(self.x)
+
+        self.mode = mode
 
 
     def __len__(self):
@@ -24,10 +31,20 @@ class Dataset(data_utils.Dataset):
         x = self.x[index].copy()
         y = self.y[index].copy()
 
+
         if self.x_min and self.x_max:
             x = (x-self.x_min)/(self.x_max-self.x_min)
 
-        return torch.tensor(x), torch.tensor(y)
+        if self.mode =='train':
+            return torch.tensor(x), torch.tensor(y)
+        
+        else:
+            lung_mask = self.lung_seg[index].copy()
+            name      = self.img_names[index]
+
+            return torch.tensor(x), torch.tensor(y), torch.tensor(lung_mask), name
+
+
     
     def get_minmax(self):
 

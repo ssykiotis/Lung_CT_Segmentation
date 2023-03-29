@@ -6,9 +6,6 @@ import cv2
 from lungmask import mask
 
 
-
-
-
 class DataParser:
 
     def __init__(self,config):
@@ -29,7 +26,6 @@ class DataParser:
 
         instance_seg_model = mask.get_model('unet','LTRCLobes')
         instance_seg_model = instance_seg_model.to('cuda:0')
-
 
         if mode == "train":
 
@@ -63,7 +59,6 @@ class DataParser:
         x, y = [], []
         l = len(patients_path)
         for idx,patient in enumerate(patients_path):
-            print(f'{idx}/{l}')
             pat = Patient(patient,instance_seg_model)
             x_i,y_i = self.format(pat,keeponly = True)
             x.append(x_i)
