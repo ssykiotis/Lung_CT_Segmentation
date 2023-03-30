@@ -24,13 +24,10 @@ class DataParser:
 
         assert mode in ["train","test"],'Mode not supported'
 
-        instance_seg_model = mask.get_model('unet','LTRCLobes')
-        instance_seg_model = instance_seg_model.to('cuda:0')
-
         if mode == "train":
 
-            x_train,y_train  = self.parse_patients(self.train_patients,instance_seg_model)
-            x_val, y_val     = self.parse_patients(self.val_patients,instance_seg_model)
+            x_train,y_train  = self.parse_patients(self.train_patients)
+            x_val, y_val     = self.parse_patients(self.val_patients)
             training_dataset = Dataset(self.config,
                                        x_train,
                                        y_train)
@@ -54,20 +51,25 @@ class DataParser:
                                      self.x_max)
             return test_dataset
         
-    def parse_patients(self,patients_path,instance_seg_model):
+    def parse_patients(self,patients_path):
 
-        x, y = [], []
+        instance_seg_model = mask.get_model('unet','LTRCLobes')
+        instance_seg_model = instance_seg_model.to('cuda:0')
+
+        x, y ,names = [], [], []
         l = len(patients_path)
         for idx,patient in enumerate(patients_path):
             pat = Patient(patient,instance_seg_model)
             x_i,y_i = self.format(pat,keeponly = True)
             x.append(x_i)
             y.append(y_i)
+            names.append(pat.names)
 
         x = np.concatenate(x)
         y = np.concatenate(y) 
+        names = np.concatenate(names)
 
-        return x,y
+        return x, y, names
 
 
     def format(self,pat,keeponly = False):

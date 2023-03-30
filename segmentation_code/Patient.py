@@ -21,7 +21,7 @@ class Patient:
 
         self.metadata    = self.get_exam_metadata()
         self.imgs        = self.read_images()
-        self.image_names = self.get_image_names()
+        self.img_names   = self.get_image_names()
 
         self.lung_seg,self.lesion_seg = self.read_segmentations()
 

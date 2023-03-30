@@ -26,6 +26,13 @@ class Dataset(data_utils.Dataset):
     def __len__(self):
         return self.x.shape[0]
 
+    def get_minmax(self):
+
+        x_min = np.min(self.x)
+        x_max = np.max(self.x)
+
+        return x_min,x_max
+
     def __getitem__(self,index):
 
         x = self.x[index].copy()
@@ -46,9 +53,3 @@ class Dataset(data_utils.Dataset):
 
 
     
-    def get_minmax(self):
-
-        x_min = np.min(self.x)
-        x_max = np.max(self.x)
-
-        return x_min,x_max
