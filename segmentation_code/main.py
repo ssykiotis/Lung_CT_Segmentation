@@ -4,6 +4,7 @@ import matplotlib
 import torch
 import matplotlib.pyplot as plt
 matplotlib.use('TkAgg')
+from time import time
 
 
 from DS_Parser import *
@@ -33,10 +34,31 @@ if __name__ == "__main__":
     #parse dataset
     ds_parser = DataParser(config)
 
+    start = time()
     train_dataset = ds_parser.get_dataset("train")
+    end   = time()
+    total = end-start
 
     print(len(train_dataset))
+    print(f'Parsing train_dataset took {total} seconds')
     
+    start = time()
+    train_dataset = ds_parser.get_dataset("val")
+    end   = time()
+    total = end-start
+
+    print(len(train_dataset))
+    print(f'Parsing val_dataset took {total} seconds')
+
+    start = time()
+    train_dataset = ds_parser.get_dataset("test")
+    end   = time()
+    total = end-start
+
+    print(len(train_dataset))
+    print(f'Parsing test_dataset took {total} seconds')
+
+
     # trainer = Trainer(config,ds_parser)
 
 
