@@ -54,15 +54,15 @@ class DataParser:
 
         x, y ,names = [], [], []
         l = len(patients_path)
-        for idx,patient in enumerate(patients_path):
+        for patient in patients_path:
             pat = Patient(patient,instance_seg_model)
-            x_i,y_i = self.format(pat,keeponly = True)
+            x_i,y_i,names_i = self.format(pat,keeponly)
             x.append(x_i)
             y.append(y_i)
-            names.append(pat.names)
+            names.append(names_i)
 
-        x = np.concatenate(x)
-        y = np.concatenate(y) 
+        x     = np.concatenate(x)
+        y     = np.concatenate(y) 
         names = np.concatenate(names)
 
         return x, y, names
@@ -76,8 +76,9 @@ class DataParser:
         output x : np.ndarray
                y : np.ndarray
         """
-        x = []
-        y = []
+        x     = []
+        y     = []
+        names = []
 
         if keeponly:
             idxs_to_keep = np.where(pat.lesion_seg.sum(axis = (1,2)))[0]
