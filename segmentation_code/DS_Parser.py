@@ -24,24 +24,24 @@ class DataParser:
 
         if mode == "train":
 
-            x, y, names = self.parse_patients(self.train_patients, keeponly = True)
-            dataset     = Dataset(self.config,
-                                  x,
-                                  y,
-                                  names
-                                 )
+            x, y, img_names = self.parse_patients(self.train_patients, keeponly = True)
+            dataset         = Dataset(self.config,
+                                      x,
+                                      y,
+                                      img_names
+                                     )
 
             self.x_min, self.x_max = dataset.get_minmax()
         else:
             if mode=='val':
-                x, y, names = self.parse_patients(self.val_patients, keeponly = False)
+                x, y, img_names = self.parse_patients(self.val_patients, keeponly = False)
             else:
-                x, y, names = self.parse_patients(self.test_patients, keeponly = False)
+                x, y, img_names = self.parse_patients(self.test_patients, keeponly = False)
 
             dataset   = Dataset(self.config,
                                 x,
                                 y,
-                                names,
+                                img_names,
                                 self.x_min,
                                 self.x_max
                                 )
@@ -52,20 +52,20 @@ class DataParser:
         instance_seg_model = mask.get_model('unet','LTRCLobes')
         instance_seg_model = instance_seg_model.to('cuda:0')
 
-        x, y ,names = [], [], []
+        x, y ,img_names = [], [], []
         l = len(patients_path)
         for patient in patients_path:
             pat = Patient(patient,instance_seg_model)
-            x_i,y_i,names_i = self.format(pat,keeponly)
+            x_i,y_i,img_names_i = self.format(pat,keeponly)
             x.append(x_i)
             y.append(y_i)
-            names.append(names_i)
+            img_names.append(img_names_i)
 
-        x     = np.concatenate(x)
-        y     = np.concatenate(y) 
-        names = np.concatenate(names)
+        x         = np.concatenate(x)
+        y         = np.concatenate(y) 
+        img_names = np.concatenate(img_names)
 
-        return x, y, names
+        return x, y, img_names
 
 
     def format(self,pat,keeponly = False):
@@ -77,9 +77,9 @@ class DataParser:
                y    : np.ndarray
                names: list
         """
-        x     = []
-        y     = []
-        names = []
+        x         = []
+        y         = []
+        img_names = []
 
         if keeponly:
             idxs_to_keep = np.where(pat.lesion_seg.sum(axis = (1,2)))[0]
@@ -117,12 +117,12 @@ class DataParser:
 
             x.append(np.expand_dims(img_resized, axis = 0))
             y.append(np.expand_dims(mask_resized,axis = 0))
-            names.append(pat.img_names[idx])
+            img_names.append(pat.img_names[idx])
 
         x = np.concatenate(x, axis = 0)
         y = np.concatenate(y, axis = 0)
 
-        return x, y, names
+        return x, y, img_names
 
     
     def train_test_split(self):
