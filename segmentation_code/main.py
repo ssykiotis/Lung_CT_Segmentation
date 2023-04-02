@@ -33,9 +33,10 @@ if __name__ == "__main__":
     #parse dataset
     ds_parser = DataParser(config)
 
-    train_dataset, val_dataset = ds_parser.get_dataset("train")
+    train_dataset = ds_parser.get_dataset("train")
 
+    print(len(train_dataset))
     
-    trainer = Trainer(config,ds_parser)
+    # trainer = Trainer(config,ds_parser)
 
 
