@@ -38,7 +38,7 @@ if __name__ == "__main__":
     end   = time()
     total = end-start
 
-    print(train_dataset.shape)
+    print(train_dataset.x.shape)
     print(f'Parsing train_dataset took {total} seconds')
     
     start = time()
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     end   = time()
     total = end-start
 
-    print(val_dataset.shape)
+    print(val_dataset.x.shape)
     print(f'Parsing val_dataset took {total} seconds')
 
     start = time()
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     end   = time()
     total = end-start
 
-    print(test_dataset.shape)
+    print(test_dataset.x.shape)
     print(f'Parsing test_dataset took {total} seconds')
 
 
