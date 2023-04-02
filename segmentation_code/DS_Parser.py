@@ -70,11 +70,12 @@ class DataParser:
 
     def format(self,pat,keeponly = False):
         """
-        selects frames. applies lung mask, resize.
+        selects frames, applies lung mask, resize.
 
         input: pat: Patient
-        output x : np.ndarray
-               y : np.ndarray
+        output x    : np.ndarray
+               y    : np.ndarray
+               names: list
         """
         x     = []
         y     = []
@@ -116,11 +117,12 @@ class DataParser:
 
             x.append(np.expand_dims(img_resized, axis = 0))
             y.append(np.expand_dims(mask_resized,axis = 0))
+            names.append(pat.img_names[idx])
 
         x = np.concatenate(x, axis = 0)
         y = np.concatenate(y, axis = 0)
 
-        return x,y
+        return x, y, names
 
     
     def train_test_split(self):
