@@ -16,8 +16,8 @@ class Patient:
 
         self.lung_seg_model = instance_seg
 
-        self.dcm_paths = self.parse_images()
-        self.seg_path  = self.parse_segmentation()
+        self.dcm_paths   = self.parse_images()
+        self.seg_path    = self.parse_segmentation()
 
         self.metadata    = self.get_exam_metadata()
         self.imgs        = self.read_images()
@@ -110,7 +110,7 @@ class Patient:
         elif len(lung_idxs)==1:
             lung_seg = res.segment_data(lung_idxs[0]) 
         else:
-            lung_seg = mask.apply(self.imgs.astype(np.float32), self.lung_seg_model, batch_size = 1)
+            lung_seg = mask.apply(self.imgs.astype(np.float32), self.lung_seg_model, batch_size = 32)
 
         lung_seg[lung_seg!=0] = 1
 

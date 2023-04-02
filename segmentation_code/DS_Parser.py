@@ -18,40 +18,36 @@ class DataParser:
         self.patient_paths = self.patient_paths[:10]
         self.train_patients,self.val_patients,self.test_patients = self.train_test_split()
 
-
-
     def get_dataset(self,mode):
 
-        assert mode in ["train","test"],'Mode not supported'
+        assert mode in ["train","val","test"],'Mode not supported'
 
         if mode == "train":
 
-            x_train,y_train  = self.parse_patients(self.train_patients)
-            x_val, y_val     = self.parse_patients(self.val_patients)
-            training_dataset = Dataset(self.config,
-                                       x_train,
-                                       y_train)
+            x, y, names = self.parse_patients(self.train_patients, keeponly = True)
+            dataset     = Dataset(self.config,
+                                  x,
+                                  y,
+                                  names
+                                 )
 
-            self.x_min, self.x_max = training_dataset.get_minmax()
-
-            val_dataset      = Dataset(self.config,
-                                       x_val,
-                                       y_val,
-                                       self.x_min,
-                                       self.x_max)
-            
-            return training_dataset,val_dataset
+            self.x_min, self.x_max = dataset.get_minmax()
         else:
+            if mode=='val':
+                x, y, names = self.parse_patients(self.val_patients, keeponly = False)
+            else:
+                x, y, names = self.parse_patients(self.test_patients, keeponly = False)
 
-            x_test, y_test = self.parse_patients(self.test_patients,instance_seg_model)
-            test_dataset   = Dataset(self.config,
-                                     x_test,
-                                     y_test,
-                                     self.x_min,
-                                     self.x_max)
-            return test_dataset
+            dataset   = Dataset(self.config,
+                                x,
+                                y,
+                                names,
+                                self.x_min,
+                                self.x_max
+                                )
+            return dataset
         
-    def parse_patients(self,patients_path):
+    def parse_patients(self,patients_path,keeponly = False):
 
         instance_seg_model = mask.get_model('unet','LTRCLobes')
         instance_seg_model = instance_seg_model.to('cuda:0')
