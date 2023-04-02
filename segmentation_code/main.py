@@ -3,7 +3,6 @@ import json
 import matplotlib
 import torch
 import matplotlib.pyplot as plt
-matplotlib.use('TkAgg')
 from time import time
 
 
