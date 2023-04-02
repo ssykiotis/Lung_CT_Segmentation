@@ -4,6 +4,7 @@ import matplotlib
 import torch
 import matplotlib.pyplot as plt
 from time import time
+import psutil
 
 
 from DS_Parser import *
@@ -44,6 +45,9 @@ if __name__ == "__main__":
 
     print(train_dataset.x.shape)
     print(f'Parsing train_dataset took {total} seconds')
+
+    print('RAM memory % used:', psutil.virtual_memory()[2])
+    print('RAM Used (GB):', psutil.virtual_memory()[3]/1000000000)
     
     start = time()
     val_dataset = ds_parser.get_dataset("val")
@@ -53,6 +57,9 @@ if __name__ == "__main__":
     print(val_dataset.x.shape)
     print(f'Parsing val_dataset took {total} seconds')
 
+    print('RAM memory % used:', psutil.virtual_memory()[2])
+    print('RAM Used (GB):', psutil.virtual_memory()[3]/1000000000)
+
     start = time()
     test_dataset = ds_parser.get_dataset("test")
     end   = time()
@@ -60,6 +67,9 @@ if __name__ == "__main__":
 
     print(test_dataset.x.shape)
     print(f'Parsing test_dataset took {total} seconds')
+
+    print('RAM memory % used:', psutil.virtual_memory()[2])
+    print('RAM Used (GB):', psutil.virtual_memory()[3]/1000000000)
 
 
     # trainer = Trainer(config,ds_parser)
