@@ -33,6 +33,10 @@ if __name__ == "__main__":
     #parse dataset
     ds_parser = DataParser(config)
 
+    print(len(ds_parser.train_patients))
+    print(len(ds_parser.val_patients))
+    print(len(ds_parser.test_patients))
+
     start = time()
     train_dataset = ds_parser.get_dataset("train")
     end   = time()
