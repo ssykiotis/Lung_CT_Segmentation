@@ -44,6 +44,8 @@ if __name__ == "__main__":
     total = end-start
 
     print(train_dataset.x.shape)
+    print(train_dataset.x.dtype)
+    print(train_dataset.y.dtype)
     print(f'Parsing train_dataset took {total} seconds')
 
     print('RAM memory % used:', psutil.virtual_memory()[2])
@@ -55,6 +57,8 @@ if __name__ == "__main__":
     total = end-start
 
     print(val_dataset.x.shape)
+    print(val_dataset.x.dtype)
+    print(val_dataset.y.dtype)
     print(f'Parsing val_dataset took {total} seconds')
 
     print('RAM memory % used:', psutil.virtual_memory()[2])
@@ -66,6 +70,10 @@ if __name__ == "__main__":
     total = end-start
 
     print(test_dataset.x.shape)
+    print(test_dataset.x.dtype)
+    print(test_dataset.y.dtype)
+
+
     print(f'Parsing test_dataset took {total} seconds')
 
     print('RAM memory % used:', psutil.virtual_memory()[2])
