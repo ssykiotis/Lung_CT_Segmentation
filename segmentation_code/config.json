@@ -1,5 +1,5 @@
 {
-    "data_location"         : "/media/stavros/WD_2TB/PhD Datasets/Cleaned/Medical/Lung Cancer/CT/NSCLC-Radiomics/clean_data",
+    "data_location"         : "../clean_data",
     "metadata_file_location": "/media/stavros/WD_2TB/PhD Datasets/Cleaned/Medical/Lung Cancer/CT/NSCLC-Radiomics/Metadata/metadata.csv",
     "batch_size"            : "1",
     "seed"                  : 0, 
