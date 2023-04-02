@@ -22,20 +22,13 @@ class Dataset(data_utils.Dataset):
 
     def __getitem__(self,index):
 
-        x = self.x[index].copy()
-        y = self.y[index].copy()
+        x    = self.x[index].copy()
+        y    = self.y[index].copy()
+        name = self.img_names[index]
 
+        x = (x-self.x_min)/(self.x_max-self.x_min)
 
-        if self.x_min and self.x_max:
-            x = (x-self.x_min)/(self.x_max-self.x_min)
-
-        if self.mode =='train':
-            return torch.tensor(x), torch.tensor(y)
-        else:
-            lung_mask = self.lung_seg[index].copy()
-            name      = self.img_names[index]
-
-            return torch.tensor(x), torch.tensor(y), torch.tensor(lung_mask), name
+        return torch.tensor(x), torch.tensor(y), name
 
 
     
