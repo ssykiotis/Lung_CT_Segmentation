@@ -45,7 +45,7 @@ class DataParser:
                                 self.x_min,
                                 self.x_max
                                 )
-            return dataset
+        return dataset
         
     def parse_patients(self,patients_path,keeponly = False):
 
