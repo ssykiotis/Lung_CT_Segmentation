@@ -38,23 +38,23 @@ if __name__ == "__main__":
     end   = time()
     total = end-start
 
-    print(len(train_dataset))
+    print(train_dataset.shape)
     print(f'Parsing train_dataset took {total} seconds')
     
     start = time()
-    train_dataset = ds_parser.get_dataset("val")
+    val_dataset = ds_parser.get_dataset("val")
     end   = time()
     total = end-start
 
-    print(len(train_dataset))
+    print(val_dataset.shape)
     print(f'Parsing val_dataset took {total} seconds')
 
     start = time()
-    train_dataset = ds_parser.get_dataset("test")
+    test_dataset = ds_parser.get_dataset("test")
     end   = time()
     total = end-start
 
-    print(len(train_dataset))
+    print(test_dataset.shape)
     print(f'Parsing test_dataset took {total} seconds')
 
 
