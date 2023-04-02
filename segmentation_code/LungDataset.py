@@ -19,6 +19,9 @@ class Dataset(data_utils.Dataset):
 
     def __len__(self):
         return self.x.shape[0]
+    
+    def get_minmax(self):
+        return self.x_min,self.x_max
 
     def __getitem__(self,index):
 
