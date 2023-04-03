@@ -129,8 +129,8 @@ class DataParser:
             mask_resized[mask_resized>0] = 1
             mask_resized = mask_resized.astype(np.int8)
 
-            x.append(np.expand_dims(img_resized, axis = 0))
-            y.append(np.expand_dims(mask_resized,axis = 0))
+            x.append(np.expand_dims(img_resized, axis = 0, 1))
+            y.append(np.expand_dims(mask_resized,axis = 0, 1))
             img_names.append(pat.img_names[idx])
 
         x = np.concatenate(x, axis = 0)
