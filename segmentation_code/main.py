@@ -44,12 +44,13 @@ if __name__ == "__main__":
     total = end-start
 
     print(train_dataset.x.shape)
-    print(train_dataset.x.dtype)
-    print(train_dataset.y.dtype)
+
     print(f'Parsing train_dataset took {total} seconds')
 
     print('RAM memory % used:', psutil.virtual_memory()[2])
     print('RAM Used (GB):', psutil.virtual_memory()[3]/1000000000)
+
+    print(train_dataset.img_names)
     
     start = time()
     val_dataset = ds_parser.get_dataset("val")
@@ -57,12 +58,15 @@ if __name__ == "__main__":
     total = end-start
 
     print(val_dataset.x.shape)
-    print(val_dataset.x.dtype)
-    print(val_dataset.y.dtype)
+
+  
     print(f'Parsing val_dataset took {total} seconds')
 
     print('RAM memory % used:', psutil.virtual_memory()[2])
     print('RAM Used (GB):', psutil.virtual_memory()[3]/1000000000)
+    print(val_dataset.img_names)
+
+
 
     start = time()
     test_dataset = ds_parser.get_dataset("test")
@@ -70,14 +74,13 @@ if __name__ == "__main__":
     total = end-start
 
     print(test_dataset.x.shape)
-    print(test_dataset.x.dtype)
-    print(test_dataset.y.dtype)
 
 
     print(f'Parsing test_dataset took {total} seconds')
 
     print('RAM memory % used:', psutil.virtual_memory()[2])
     print('RAM Used (GB):', psutil.virtual_memory()[3]/1000000000)
+    print(test_dataset.img_names)
 
 
     # trainer = Trainer(config,ds_parser)
