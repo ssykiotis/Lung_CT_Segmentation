@@ -194,9 +194,9 @@ class Trainer:
 
     def export_images(self,x,y_hat,y,img_names):
 
-        x     = x.detach().cpu().numpy()
-        y_hat = y_hat.detach().cpu().numpy()
-        y     = y.detach().cpu().numpy()
+        x     = x.detach().cpu().numpy().squeeze()
+        y_hat = y_hat.detach().cpu().numpy().squeeze()
+        y     = y.detach().cpu().numpy().squeeze()
 
         imgs_path = f'{self.export_root}/imgs'
         if not os.path.exists(imgs_path):
