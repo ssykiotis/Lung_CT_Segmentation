@@ -45,6 +45,7 @@ if __name__ == "__main__":
     total = (end-start)/60
 
     print('Training took {:.2f} hours'.format(total))
+    print(f'Best Epoch: {trainer.best_epoch}')
 
     trainer.test()
 
