@@ -33,7 +33,7 @@ class Trainer:
 
         self.export_root = self.config['export_root']
 
-        self.bce_dice = BCEDiceLoss()
+        self.loss_fn = BCEDiceLoss()
         self.optimizer = self.create_optimizer()
 
         if config['enable_lr_schedule']:
