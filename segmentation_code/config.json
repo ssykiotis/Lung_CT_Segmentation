@@ -1,7 +1,7 @@
 {
     "data_location"         : "../clean_data",
     "export_root"           : "../results/",
-    "batch_size"            : 32,
+    "batch_size"            : 16,
     "num_epochs"            : 100,
     "seed"                  : 0, 
     "training_percent"      : 0.8,
