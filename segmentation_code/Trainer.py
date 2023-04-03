@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 import numpy  as np
+os.environ['NUMEXPR_MAX_THREADS'] = '32'
+
 
 import torch.utils.data as data_utils
 import torch.optim      as optim
@@ -14,7 +16,6 @@ from torchmetrics.classification import BinaryConfusionMatrix
 
 class Trainer:
 
-    #TODO
     def __init__(self,config,ds_parser):
         self.config = config
 
@@ -96,8 +97,6 @@ class Trainer:
 
         return f1_mean
 
-
-    #TODO
     def test(self):
 
         self.model.eval()
@@ -148,7 +147,8 @@ class Trainer:
             dataloader = data_utils.DataLoader(dataset,
                                                batch_size = self.config['batch_size'],
                                                shuffle    = True,
-                                               pin_memory = True
+                                               pin_memory = True,
+                                               drop_last  = False
                                                )
             self.x_min, self.x_max = dataset.get_minmax()
         else:
@@ -156,7 +156,8 @@ class Trainer:
             dataloader = data_utils.DataLoader(dataset,
                                                batch_size = self.config['batch_size'],
                                                shuffle    = False,
-                                               pin_memory = True
+                                               pin_memory = True,
+                                               drop_last  = False
                                                )
         return dataloader
             
