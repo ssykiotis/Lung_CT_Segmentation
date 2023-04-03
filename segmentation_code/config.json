@@ -1,6 +1,6 @@
 {
     "data_location"         : "../clean_data",
-    "export_root"           : "../results/",
+    "export_root"           : "../results",
     "batch_size"            : 16,
     "num_epochs"            : 5,
     "seed"                  : 0, 
