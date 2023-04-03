@@ -207,12 +207,13 @@ class Trainer:
             img_norm = (img_norm* 255).astype('uint8')
 
             patient_name   = img_names[i].split('/')[0]
+            img_num        = img_names[i].split('/')[1]
             patient_folder = f'{imgs_path}/{patient_name}'
             if not os.path.exists(patient_folder):
                 os.makedirs(patient_folder)
 
             png_image = Image.fromarray(img_norm)
-            png_path  = f'{patient_folder}/{img_names[i]}_original.png'
+            png_path  = f'{patient_folder}/{img_num}_original.png'
             png_image.save(png_path)
 
             mask    = y_hat[i].astype('uint8')
@@ -225,11 +226,11 @@ class Trainer:
             mask_rgb = np.stack((R,G,B), axis=2)
 
             png_mask = Image.fromarray(mask_rgb,mode = 'RGB')
-            mask_path = f'{patient_folder}/{img_names[i]}_masks.png'
+            mask_path = f'{patient_folder}/{img_num}_masks.png'
             png_mask.save(mask_path)
 
             png_image_rgb = png_image.convert(mode = 'RGB')
             image_overlay = Image.blend(png_image_rgb, png_mask, 0.3)
-            png_overlay_path = f'{patient_folder}/{img_names[i]}_overlay.png'
+            png_overlay_path = f'{patient_folder}/{img_num}_overlay.png'
             image_overlay.save(png_overlay_path)
             
