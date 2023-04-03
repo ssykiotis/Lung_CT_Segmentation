@@ -2,6 +2,7 @@
     "data_location"         : "../clean_data",
     "export_root"           : "../results/",
     "batch_size"            : 64,
+    "num_epochs"            : 100,
     "seed"                  : 0, 
     "training_percent"      : 0.8,
     "img_size"              : 256,
