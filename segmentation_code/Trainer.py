@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import numpy  as np
-os.environ['NUMEXPR_MAX_THREADS'] = '32'
 
 
 import torch.utils.data as data_utils

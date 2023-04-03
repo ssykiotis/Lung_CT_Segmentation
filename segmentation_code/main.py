@@ -5,6 +5,8 @@ import torch
 import matplotlib.pyplot as plt
 from time import time
 import psutil
+import os 
+
 
 
 from DS_Parser import *
@@ -21,6 +23,8 @@ def setup_seed(seed):
 
 
 if __name__ == "__main__":
+    os.environ['NUMEXPR_MAX_THREADS'] = '32'
+
 
     #read config file
     with open('config.json','rb') as f:
