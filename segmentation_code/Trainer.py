@@ -122,9 +122,12 @@ class Trainer:
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
                 for i in range(y_hat.shape[0]):
-                    c                     = Confusion_Matrix(y_hat[i],y[i])
-                    tn,fp                 = c[0]
-                    fn,tp                 = c[1]
+                    c  = Confusion_Matrix(y_hat[i],y[i])
+                    tn = c[0,0].detach().cpu().numpy().item()
+                    fp = c[0,1].detach().cpu().numpy().item()
+                    fn = c[1,0].detach().cpu().numpy().item()
+                    tp = c[1,1].detach().cpu().numpy().item()
+
                     results.loc[names[i]] = (tn, fp, fn, tp)
 
                     self.export_images(x,y_hat,y,names)
