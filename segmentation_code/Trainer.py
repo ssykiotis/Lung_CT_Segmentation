@@ -1,11 +1,16 @@
-from Model import *
 import os
-import numpy as np
+import pandas as pd
+import numpy  as np
+
 import torch.utils.data as data_utils
 import torch.optim      as optim
 
-from tqdm               import tqdm
-from loss               import BCEDiceLoss
+from Model                       import *
+from PIL                         import Image
+from tqdm                        import tqdm
+from loss                        import BCEDiceLoss
+from torchmetrics.classification import BinaryF1Score
+from torchmetrics.classification import BinaryConfusionMatrix
 
 class Trainer:
 
@@ -48,9 +53,6 @@ class Trainer:
                 best_f1 = f1
                 self.save_model()
 
-
-    
-    #TODO
     def train_one_epoch(self,epoch):
         loss_values     = []
         tqdm_dataloader = tqdm(self.train_dl)
@@ -72,22 +74,70 @@ class Trainer:
 
             loss_values.append(loss.item())
             average_loss = np.mean(np.array(loss_values))
-            
+
             tqdm_dataloader.set_description('Epoch {}, loss {:.2f}'.format(epoch, average_loss))
     
-    #TODO
+    
     def validate(self):
-        pass
+        self.model.eval()
+        F1_Score = BinaryF1Score()
+        with torch.no_grad():
+            tqdm_dataloader = tqdm(self.val_dl)
+            for _,batch in enumerate(tqdm_dataloader):
+                x, y, _ = batch 
+                x       = x.to(self.config["device"])
+                y       = y.to(self.config["device"]).to(torch.float16)                
+            
+                y_hat   = self.model(x)
+
+                f1      = F1_Score.update(y_hat, y)
+                f1_mean = F1_Score.compute()
+
+                tqdm_dataloader.set_description('Validation, F1 {:.2f}'.format(f1_mean))
+
+        return f1_mean
 
 
     #TODO
     def test(self):
-        pass
 
+        self.model.eval()
+        F1_Score = BinaryF1Score()
+        Confusion_Matrix = BinaryConfusionMatrix()
+        self.test_dl = self.get_dataloader("test")
+        img_names = self.test_dl.dataset.img_names
+        results = pd.DataFrame(data    = None,
+                               index   = img_names,
+                               columns = ['tn', 'fp', 'fn', 'tp']
+                               )
 
-    #TODO
-    def loss_fn(self):
-        pass
+        tqdm_dataloader = tqdm(self.test_dl)
+
+        with torch.no_grad():
+            for _,batch in enumerate(tqdm_dataloader):
+                x, y, names = batch 
+                x       = x.to(self.config["device"])
+                y       = y.to(self.config["device"]).to(torch.float16)                
+            
+                y_hat   = self.model(x)
+
+                f1      = F1_Score.update(y_hat, y)
+                f1_mean = F1_Score.compute()
+                for i in range(y_hat.shape[0]):
+
+                    tn, fp, fn, tp        = Confusion_Matrix(y_hat[i],y[i])
+                    results.loc[names[i]] = (tn, fp, fn, tp)
+
+                    self.export_images(x,y_hat,y,names)
+
+                tqdm_dataloader.set_description('Test, F1 {:.2f}'.format(f1_mean))
+
+            
+
+        results.to_csv(f'{self.export_path}/results.csv')
+
+        return f1_mean
+
 
 
     def get_dataloader(self,mode):
@@ -110,10 +160,6 @@ class Trainer:
                                                pin_memory = True
                                                )
         return dataloader
-
-
-
-
             
     def save_model(self):
         if not os.path.exists(self.export_root):
@@ -140,7 +186,37 @@ class Trainer:
             return optim.SGD(optimizer_grouped_parameters, lr=self.lr, momentum=self.config['momentum'])
         else:
             raise ValueError
-
-    def export_results(self):
-        pass
         
+
+    def export_images(self,x,y_hat,y,img_names):
+
+        imgs_path = f'{self.export_root}/imgs'
+        if not os.path.exists(imgs_path):
+            os.makedirs(imgs_path)
+
+        for i in range(x.shape[0]):
+            img_norm = (x[i]-x[i].min())/(x[i].max()-x[i].min())
+            img_norm = (img_norm* 255).astype('uint8')
+
+            png_image = Image.fromarray(img_norm)
+            png_path  = f'{imgs_path}/{img_names[i]}_original.png'
+            png_image.save(png_path)
+
+            mask    = y_hat[i].astype('uint8')
+            mask_gt = y[i].astype('uint8')
+
+            R,G,B = mask.copy(), mask.copy(), mask_gt.copy()
+            R       = mask*255
+            G[mask] = 0
+            B[mask] = mask_gt*255
+            mask_rgb = np.stack((R,G,B), axis=2)
+
+            png_mask = Image.fromarray(mask_rgb,mode = 'RGB')
+            mask_path = f'{imgs_path}/{img_names[i]}_masks.png'
+            png_mask.save(mask_path)
+
+            png_image_rgb = png_image.convert(mode = 'RGB')
+            image_overlay = Image.blend(png_image_rgb, png_mask, 0.3)
+            png_overlay_path = f'{imgs_path}/{img_names[i]}_overlay.png'
+            image_overlay.save(png_overlay_path)
+            
