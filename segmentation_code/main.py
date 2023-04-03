@@ -39,7 +39,13 @@ if __name__ == "__main__":
 
     
     trainer = Trainer(config,ds_parser)
+    start = time()
     trainer.train()
+    end = time()
+    total = (end-start)/60
+
+    print('Training took {:.2f} hours'.format(total))
+
     trainer.test()
 
 
