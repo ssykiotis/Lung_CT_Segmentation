@@ -217,15 +217,12 @@ class Trainer:
             png_image.save(png_path)
 
             mask    = y_hat[i].astype('uint8')
-            print(y[i].sum())
             mask_gt = y[i].astype('uint8')
-            print(mask_gt.sum())
-            print()
 
-            R,G,B = mask.copy(), mask.copy(), mask_gt.copy()
+            # R,G,B = mask.copy(), mask.copy(), mask_gt.copy()
             R       = mask*255
-            G[mask] = 0
-            B[mask] = mask_gt*255
+            G       = 0
+            B       = mask_gt*255
             mask_rgb = np.stack((R,G,B), axis=2)
 
             png_mask = Image.fromarray(mask_rgb,mode = 'RGB')
