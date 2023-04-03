@@ -15,4 +15,4 @@ class BCEDiceLoss(nn.Module):
         # Dice Loss
         dice_coef = (2.0 * (pred * truth).sum() + 1) / (pred.sum() + truth.sum() + 1)
 
-        return bce_loss.to(torch.float16) + (1 - dice_coef)
+        return bce_loss + (1 - dice_coef)

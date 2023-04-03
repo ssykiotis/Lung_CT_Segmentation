@@ -28,7 +28,7 @@ class Trainer:
         self.lr       = self.config["learning_rate"]
 
         self.model    = ResUnetPlusPlus(1)
-        self.model    = self.model.to(self.config["device"]).to(torch.float16)
+        self.model    = self.model.to(self.config["device"]).to(torch.float32)
         # self.model    = torch.compile(self.model)
 
         self.export_root = self.config['export_root']
@@ -63,7 +63,7 @@ class Trainer:
 
             x, y, _ = batch
             x       = x.to(self.config["device"])
-            y       = y.to(self.config["device"]).to(torch.float16)
+            y       = y.to(self.config["device"]).to(torch.float32)
 
             self.optimizer.zero_grad()
 
@@ -87,7 +87,7 @@ class Trainer:
             for _,batch in enumerate(tqdm_dataloader):
                 x, y, _ = batch 
                 x       = x.to(self.config["device"])
-                y       = y.to(self.config["device"]).to(torch.float16)                
+                y       = y.to(self.config["device"]).to(torch.float32)                
             
                 y_hat   = self.model(x)
 
@@ -116,7 +116,7 @@ class Trainer:
             for _,batch in enumerate(tqdm_dataloader):
                 x, y, names = batch 
                 x       = x.to(self.config["device"])
-                y       = y.to(self.config["device"]).to(torch.float16)                
+                y       = y.to(self.config["device"]).to(torch.float32)                
             
                 y_hat   = self.model(x)
 
