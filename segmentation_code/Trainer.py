@@ -123,7 +123,8 @@ class Trainer:
                 f1_mean = F1_Score.compute()
                 for i in range(y_hat.shape[0]):
                     c                     = Confusion_Matrix(y_hat[i],y[i])
-                    tn, fp, fn, tp        = c
+                    tn,fp                 = c[0]
+                    fn,tp                 = c[1]
                     results.loc[names[i]] = (tn, fp, fn, tp)
 
                     self.export_images(x,y_hat,y,names)
