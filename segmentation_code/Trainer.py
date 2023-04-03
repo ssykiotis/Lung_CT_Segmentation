@@ -166,7 +166,7 @@ class Trainer:
         if not os.path.exists(self.export_root):
             os.makedirs(self.export_root)
         print('Saving best model...')
-        torch.save(self.model.state_dict(), self.export_root.joinpath('best_model.pth'))
+        torch.save(self.model.state_dict(), f'{self.export_root}/best_model.pth')
 
 
     def create_optimizer(self):
