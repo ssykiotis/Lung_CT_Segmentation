@@ -30,7 +30,6 @@ if __name__ == "__main__":
 
     setup_seed(config["seed"])
 
-
     #parse dataset
     ds_parser = DataParser(config)
 

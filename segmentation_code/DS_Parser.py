@@ -19,8 +19,14 @@ class DataParser:
         self.train_patients,self.val_patients,self.test_patients = self.train_test_split()
 
     def get_dataset(self,mode):
+        """
+        returns parsed dataset that corresponds to the specified mode
+        input: mode: str
 
-        assert mode in ["train","val","test"],'Mode not supported'
+        output: dataset: Dataset 
+        """
+
+        assert mode in ["train","val","test"], 'Mode not supported'
 
         if mode == "train":
 
@@ -48,6 +54,14 @@ class DataParser:
         return dataset
         
     def parse_patients(self,patients_path,keeponly = False):
+        """
+        parses patients included in patient_path and returnes the processed patient images:
+        input:  patients_path: list  List with all patient paths that need to be parsed
+
+        output: x:np.ndarray    CT scan images, cropped and resized
+                y:np.ndarray    segmentation masks
+                img_names: list image names
+        """
 
         instance_seg_model = mask.get_model('unet','LTRCLobes')
         instance_seg_model = instance_seg_model.to('cuda:0')
@@ -71,11 +85,11 @@ class DataParser:
     def format(self,pat,keeponly = False):
         """
         selects frames, applies lung mask, resize.
+        input: pat      : Patient
 
-        input: pat: Patient
-        output x    : np.ndarray
-               y    : np.ndarray
-               names: list
+        output x        : np.ndarray
+               y        : np.ndarray
+               img_names: list
         """
         x         = []
         y         = []
@@ -126,6 +140,10 @@ class DataParser:
 
     
     def train_test_split(self):
+        """
+        splits dataset in training, validation and test set according to the split ratio defined in the config file
+        """
+
         num_patients = len(self.patient_paths)
         random.shuffle(self.patient_paths)
 
