@@ -25,6 +25,7 @@ class Trainer:
         self.val_dl   = self.get_dataloader("val")
 
         self.epochs   = self.config["num_epochs"]
+        self.lr       = self.config["learning_rate"]
 
         self.model    = ResUnetPlusPlus(1)
         self.model    = self.model.to(self.config["device"]).to(torch.float16)
