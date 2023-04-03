@@ -219,6 +219,9 @@ class Trainer:
             mask    = y_hat[i].astype('uint8')
             mask_gt = y[i].astype('uint8')
 
+            print(mask.shape)
+            print(mask_gt.shape)
+
             # R,G,B = mask.copy(), mask.copy(), mask_gt.copy()
             R       = mask*255
             G       = 0
