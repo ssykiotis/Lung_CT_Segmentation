@@ -40,7 +40,6 @@ class Trainer:
                                                           gamma     = self.config['gamma']
                                                          )
 
-
     def train(self):
         best_f1 = self.validate()
         self.save_model()

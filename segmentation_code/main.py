@@ -34,6 +34,8 @@ if __name__ == "__main__":
     ds_parser = DataParser(config)
 
     
-    # trainer = Trainer(config,ds_parser)
+    trainer = Trainer(config,ds_parser)
+    trainer.train()
+    trainer.test()
 
 
