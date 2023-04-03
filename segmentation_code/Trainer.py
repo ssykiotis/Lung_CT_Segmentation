@@ -224,7 +224,7 @@ class Trainer:
 
             # R,G,B = mask.copy(), mask.copy(), mask_gt.copy()
             R       = mask*255
-            G       = 0
+            G       = mask*0
             B       = mask_gt*255
             mask_rgb = np.stack((R,G,B), axis=2)
 
