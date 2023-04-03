@@ -51,6 +51,7 @@ class Trainer:
 
             if f1>best_f1:
                 best_f1 = f1
+                self.best_epoch = epoch+1
                 self.save_model()
 
     def train_one_epoch(self,epoch):

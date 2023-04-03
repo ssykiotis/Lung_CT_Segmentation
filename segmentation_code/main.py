@@ -24,6 +24,7 @@ def setup_seed(seed):
 
 if __name__ == "__main__":
     os.environ['NUMEXPR_MAX_THREADS'] = '32'
+    print(torch.cuda.is_available())
 
 
     #read config file
