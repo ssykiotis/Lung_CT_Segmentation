@@ -123,7 +123,7 @@ class Patient:
 
     def get_image_names(self):
         patient_name = self.path.split('/')[-1]
-        image_names = [f'{patient_name}/{i+1}' for i in range(self.imgs.shape[0])]
+        image_names = [f'{patient_name}_{i+1}' for i in range(self.imgs.shape[0])]
 
         return image_names
 
