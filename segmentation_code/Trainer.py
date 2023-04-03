@@ -81,7 +81,7 @@ class Trainer:
     
     def validate(self):
         self.model.eval()
-        F1_Score = BinaryF1Score()
+        F1_Score = BinaryF1Score().to(self.config["device"])
         with torch.no_grad():
             tqdm_dataloader = tqdm(self.val_dl)
             for _,batch in enumerate(tqdm_dataloader):
@@ -101,8 +101,8 @@ class Trainer:
     def test(self):
 
         self.model.eval()
-        F1_Score = BinaryF1Score()
-        Confusion_Matrix = BinaryConfusionMatrix()
+        F1_Score = BinaryF1Score().to(self.config["device"])
+        Confusion_Matrix = BinaryConfusionMatrix().to(self.config["device"])
         self.test_dl = self.get_dataloader("test")
         img_names = self.test_dl.dataset.img_names
         results = pd.DataFrame(data    = None,

@@ -40,7 +40,6 @@ class ResUnetPlusPlus(nn.Module):
         self.output_layer      = nn.Sequential(nn.Conv2d(filters[0], 1, 1), nn.Sigmoid())
 
     def forward(self, x):
-        print(x.shape)
         x1  = self.input_layer(x) + self.input_skip(x)
 
         x2  = self.squeeze_excite1(x1)
