@@ -48,6 +48,8 @@ class Trainer:
         for epoch in range(self.epochs):
             self.train_one_epoch(epoch+1)
             f1 = self.validate()
+            if self.lr_scheduler:
+                self.lr_scheduler.step()
 
             if f1>best_f1:
                 best_f1 = f1

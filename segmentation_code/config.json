@@ -9,10 +9,10 @@
     "crop_buffer"           : 20,
     "enable_lr_schedule"    : 1,
     "weight_decay"          : 0,
-    "decay_step"            : 100,
+    "decay_step"            : 30,
     "gamma"                 : 0.1,
     "optimizer"             : "adam",
-    "learning_rate"         : 1e-4,
+    "learning_rate"         : 1e-3,
     "device"                : "cuda"
 }
 
