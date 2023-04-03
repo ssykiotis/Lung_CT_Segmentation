@@ -217,7 +217,10 @@ class Trainer:
             png_image.save(png_path)
 
             mask    = y_hat[i].astype('uint8')
+            print(y[i].sum())
             mask_gt = y[i].astype('uint8')
+            print(mask_gt.sum())
+            print()
 
             R,G,B = mask.copy(), mask.copy(), mask_gt.copy()
             R       = mask*255
