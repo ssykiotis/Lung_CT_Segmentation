@@ -1,11 +1,18 @@
 {
     "data_location"         : "../clean_data",
     "metadata_file_location": "/media/stavros/WD_2TB/PhD Datasets/Cleaned/Medical/Lung Cancer/CT/NSCLC-Radiomics/Metadata/metadata.csv",
-    "batch_size"            : "1",
+    "export_root"           : "../results/",
+    "batch_size"            : "32",
     "seed"                  : 0, 
     "training_percent"      : 0.8,
     "img_size"              : 256,
-    "crop_buffer"           : 20
+    "crop_buffer"           : 20,
+    "enable_lr_schedule"    : ,
+    "decay_step"            : ,
+    "gamma"                 : ,
+    "optimizer"             : ,
+    "learning_rate"         : ,
+    "device"                : "cuda"
 }
 
 

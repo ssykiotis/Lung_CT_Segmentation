@@ -13,7 +13,7 @@ class BCEDiceLoss(nn.Module):
 
         # Dice Loss
         dice_coef = (2.0 * (pred * truth).double().sum() + 1) / (
-            pred.double().sum() + truth.double().sum() + 1
-        )
+                    pred.double().sum() + truth.double().sum() + 1
+                    )
 
         return bce_loss + (1 - dice_coef)
