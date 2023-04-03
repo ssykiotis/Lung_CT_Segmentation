@@ -28,7 +28,7 @@ class Trainer:
 
         self.model    = ResUnetPlusPlus(1)
         self.model    = self.model.to(self.config["device"]).to(torch.float16)
-        self.model    = torch.compile(self.model)
+        # self.model    = torch.compile(self.model)
 
         self.export_root = self.config['export_root']
 
