@@ -146,7 +146,7 @@ class Trainer:
         if mode == "train":
             dataset    = self.ds_parser.get_dataset(mode)
             dataloader = data_utils.DataLoader(dataset,
-                                               batch_size = self.batch_size,
+                                               batch_size = self.config['batch_size'],
                                                shuffle    = True,
                                                pin_memory = True
                                                )
@@ -154,7 +154,7 @@ class Trainer:
         else:
             dataset    = self.ds_parser.get_dataset(mode)
             dataloader = data_utils.DataLoader(dataset,
-                                               batch_size = self.batch_size,
+                                               batch_size = self.config['batch_size'],
                                                shuffle    = False,
                                                pin_memory = True
                                                )
