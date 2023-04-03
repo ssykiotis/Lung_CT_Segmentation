@@ -46,7 +46,7 @@ class Trainer:
         best_f1 = self.validate()
         self.save_model()
 
-        for epoch in range(self.num_epochs):
+        for epoch in range(self.epochs):
             self.train_one_epoch(epoch+1)
             f1 = self.validate()
 
