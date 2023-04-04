@@ -242,12 +242,12 @@ class ResUnetPlusPlus(nn.Module):
 
         self.b1 = ASPP(512, 1024)
 
-        self.d1 = Decoder_Block([512, 1024], 1024)
-        self.d2 = Decoder_Block([256,  512],  512)
-        self.d3 = Decoder_Block([128,  256],  256)
-        self.d4 = Decoder_Block([ 64,  128],  128)
-        self.d5 = Decoder_Block([ 32,   64],   64)
-        self.d6 = Decoder_Block([ 16,   32],   32)
+        self.d1 = Decoder_Block([256, 1024], 512)
+        self.d2 = Decoder_Block([128,  512], 256)
+        self.d3 = Decoder_Block([ 64,  256], 128)
+        self.d4 = Decoder_Block([ 32,  128],  64)
+        self.d5 = Decoder_Block([ 16,   64],  32)
+        # self.d6 = Decoder_Block([ 16,   32],   32)
 
         self.aspp = ASPP(32, 16)
 
@@ -263,14 +263,13 @@ class ResUnetPlusPlus(nn.Module):
 
         b1 = self.b1(c6)
 
-        d1 = self.d1(c6, b1)
-        d2 = self.d2(c5, d1)
-        d3 = self.d3(c4, d2)
-        d4 = self.d4(c3, d3)
-        d5 = self.d5(c2, d4)
-        d6 = self.d6(c1, d5)
+        d1 = self.d1(c5, b1)
+        d2 = self.d2(c4, d1)
+        d3 = self.d3(c3, d2)
+        d4 = self.d4(c2, d3)
+        d5 = self.d5(c1, d4)
 
-        output = self.aspp(d6)
+        output = self.aspp(d5)
         output = self.output(output)
 
         return output
