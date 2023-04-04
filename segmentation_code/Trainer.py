@@ -26,7 +26,7 @@ class Trainer:
         self.epochs   = self.config["num_epochs"]
         self.lr       = self.config["learning_rate"]
 
-        self.model    = ResUnetPlusPlus(1)
+        self.model    = ResUnetPlusPlus()
         self.model    = self.model.to(self.config["device"]).to(torch.float32)
         # self.model    = torch.compile(self.model)
 
