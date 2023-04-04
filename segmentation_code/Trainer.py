@@ -50,6 +50,7 @@ class Trainer:
     def train(self):
         best_f1 = self.validate()
         self.save_model()
+        self.best_epoch = 0
 
         for epoch in range(self.epochs):
             self.train_one_epoch(epoch+1)
