@@ -233,7 +233,7 @@ class ResUnetPlusPlus(nn.Module):
     def __init__(self):
         super().__init__()
 
-        self.c1 = Stem_Block(   3, 16,  stride=1)
+        self.c1 = Stem_Block(   1, 16,  stride=1)
         self.c2 = ResNet_Block(16, 32,  stride=2)
         self.c3 = ResNet_Block(32, 64,  stride=2)
         self.c4 = ResNet_Block(64, 128, stride=2)
