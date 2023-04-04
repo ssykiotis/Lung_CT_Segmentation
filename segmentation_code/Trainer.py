@@ -213,7 +213,8 @@ class Trainer:
             os.makedirs(imgs_path)
 
         for i in range(x.shape[0]):
-            img_norm = (x[i]-x[i].min())/(x[i].max()-x[i].min())
+            img_norm = (x[i]-x[i].min())/(x[i].max()-x[i].min()+1e-9)
+
             img_norm = (img_norm* 255).astype('uint8')
 
             patient_name   = img_names[i].split('/')[0]
