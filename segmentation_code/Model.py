@@ -233,16 +233,20 @@ class ResUnetPlusPlus(nn.Module):
     def __init__(self):
         super().__init__()
 
-        self.c1 = Stem_Block(   1, 16,  stride=1)
-        self.c2 = ResNet_Block(16, 32,  stride=2)
-        self.c3 = ResNet_Block(32, 64,  stride=2)
-        self.c4 = ResNet_Block(64, 128, stride=2)
+        self.c1 = Stem_Block(   1, 16,   stride = 1)
+        self.c2 = ResNet_Block(16, 32,   stride = 2)
+        self.c3 = ResNet_Block(32, 64,   stride = 2)
+        self.c4 = ResNet_Block(64, 128,  stride = 2)
+        self.c5 = ResNet_Block(128, 256, stride = 2)
+        self.c6 = ResNet_Block(256, 512, stride = 2)
 
-        self.b1 = ASPP(128, 256)
+        self.b1 = ASPP(512, 1024)
 
-        self.d1 = Decoder_Block([64, 256], 128)
-        self.d2 = Decoder_Block([32, 128], 64)
-        self.d3 = Decoder_Block([16, 64],  32)
+        self.d1 = Decoder_Block([256, 1024], 512)
+        self.d2 = Decoder_Block([128, 512],  256)
+        self.d3 = Decoder_Block([64,  256],  128)
+        self.d4 = Decoder_Block([32,  128],   64)
+        self.d5 = Decoder_Block([16,   64],   32)
 
         self.aspp = ASPP(32, 16)
 
@@ -253,14 +257,18 @@ class ResUnetPlusPlus(nn.Module):
         c2 = self.c2(c1)
         c3 = self.c3(c2)
         c4 = self.c4(c3)
+        c5 = self.c5(c4)
+        c6 = self.c6(c5)
 
-        b1 = self.b1(c4)
+        b1 = self.b1(c6)
 
-        d1 = self.d1(c3, b1)
-        d2 = self.d2(c2, d1)
-        d3 = self.d3(c1, d2)
+        d1 = self.d1(c6, b1)
+        d2 = self.d2(c5, d1)
+        d3 = self.d3(c4, d2)
+        d4 = self.d4(c3, d3)
+        d5 = self.d5(c2, d4)
 
-        output = self.aspp(d3)
+        output = self.aspp(d5)
         output = self.output(output)
 
         return output
