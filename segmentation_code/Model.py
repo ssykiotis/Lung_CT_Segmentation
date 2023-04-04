@@ -251,10 +251,11 @@ class ResUnetPlusPlus(nn.Module):
 
         self.aspp = ASPP(32, 16)
 
-        self.output = nn.Conv2d(16, 1, kernel_size=1, padding=0)
+        self.output  = nn.Conv2d(16, 1, kernel_size=1, padding=0)
+        self.act_out = nn.Sigmoid()
 
     def forward(self, inputs):
-        print(inputs.shape)
+
         c1 = self.c1(inputs)
         c2 = self.c2(c1)
         c3 = self.c3(c2)
@@ -272,7 +273,7 @@ class ResUnetPlusPlus(nn.Module):
 
         output = self.aspp(d5)
         output = self.output(output)
-        print(output.shape)
+        output = self.act_out(output)
 
         return output
     
