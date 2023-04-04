@@ -13,6 +13,8 @@ from loss                        import BCEDiceLoss
 from torchmetrics.classification import BinaryF1Score
 from torchmetrics.classification import BinaryConfusionMatrix
 
+from ptflops import get_model_complexity_info
+
 class Trainer:
 
     def __init__(self,config,ds_parser):
@@ -28,6 +30,10 @@ class Trainer:
 
         self.model    = ResUnetPlusPlus()
         self.model    = self.model.to(self.config["device"]).to(torch.float32)
+        flops, params = get_model_complexity_info(self.model, input_res=(1, 256, 256), as_strings=True, print_per_layer_stat=False)
+        print('      - Flops:  ' + flops)
+        print('      - Params: ' + params)
+
         # self.model    = torch.compile(self.model)
 
         self.export_root = self.config['export_root']
