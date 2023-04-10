@@ -1,5 +1,6 @@
 {
     "data_location"         : "../clean_data",
+    "metadata_location"     : "../metadata.csv",
     "export_root"           : "../results",
     "batch_size"            : 16,
     "num_epochs"            : 100,
@@ -13,7 +14,8 @@
     "gamma"                 : 0.1,
     "optimizer"             : "adam",
     "learning_rate"         : 1e-3,
-    "device"                : "cuda"
+    "device"                : "cuda",
+    "vendor"                : "SIEMENS"
 }
 
 
