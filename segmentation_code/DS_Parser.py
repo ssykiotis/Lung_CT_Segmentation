@@ -4,6 +4,7 @@ from LungDataset import *
 import random
 import cv2
 from lungmask import mask
+import pandas as pd
 
 
 class DataParser:
@@ -11,11 +12,11 @@ class DataParser:
     def __init__(self,config):
         self.config = config
 
-        self.patient_paths = [f'{config["data_location"]}/{file}'\
-                              for file in sorted(os.listdir(config["data_location"]))\
-                              if not file.startswith('.')]
+        self.patient_paths = self.get_patient_paths(self.config["vendor"])
         
-        self.patient_paths = self.patient_paths
+
+        
+        # self.patient_paths = self.patient_paths
         self.train_patients,self.val_patients,self.test_patients = self.train_test_split()
 
     def get_dataset(self,mode):
@@ -155,6 +156,22 @@ class DataParser:
         test_patients     = self.patient_paths[first_test_idx:]
 
         return training_patients,val_patients,test_patients
+    
+
+    def get_patient_paths(self,vendor = None):
+        if vendor:
+            metadata = pd.read_csv(self.config['metadata_location'])
+            mod = 'CT'
+            metadata = metadata.query('Modality==@mod and Manufacturer == @vendor')
+            eligible_patients = metadata['Manufacturer'].apply(lambda x: x.split('/')[2])
+
+            patient_paths = sorted([f'{self.config["data_location"]}/{pat}' for pat in eligible_patients])
+        else:
+            patient_paths = [f'{self.config["data_location"]}/{file}'\
+                            for file in sorted(os.listdir(self.config["data_location"]))\
+                            if not file.startswith('.')]
+            
+        return patient_paths
     
 
 
