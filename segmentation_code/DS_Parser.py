@@ -163,7 +163,7 @@ class DataParser:
             metadata = pd.read_csv(self.config['metadata_location'])
             mod = 'CT'
             metadata = metadata.query('Modality==@mod and Manufacturer == @vendor')
-            eligible_patients = metadata['Manufacturer'].apply(lambda x: x.split('/')[2]).tolist()
+            eligible_patients = metadata['File Location'].apply(lambda x: x.split('/')[2]).tolist()
 
             patient_paths = sorted([f'{self.config["data_location"]}/{pat}' for pat in eligible_patients])
         else:
