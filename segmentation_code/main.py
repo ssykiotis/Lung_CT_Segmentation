@@ -40,14 +40,18 @@ if __name__ == "__main__":
 
     
     trainer = Trainer(config,ds_parser)
-    start = time()
-    trainer.train()
-    end = time()
-    total = (end-start)/60
 
-    print('Training took {:.2f} minutes'.format(total))
-    print(f'Best Epoch: {trainer.best_epoch}')
+    if config["mode"] =="train":
+        start = time()
+        trainer.train()
+        end = time()
+        total = (end-start)/60
 
-    trainer.test()
+        print('Training took {:.2f} minutes'.format(total))
+        print(f'Best Epoch: {trainer.best_epoch}')
+
+        trainer.test()
+    else:
+        trainer.test()
 
 

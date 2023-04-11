@@ -2,6 +2,7 @@
     "data_location"         : "../clean_data",
     "metadata_location"     : "../metadata.csv",
     "export_root"           : "../results",
+    "mode"                  : "test",
     "batch_size"            : 16,
     "num_epochs"            : 100,
     "seed"                  : 0, 
