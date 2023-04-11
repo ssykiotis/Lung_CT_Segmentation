@@ -109,6 +109,8 @@ class Trainer:
 
     def test(self):
 
+        self.load_best_model()
+
         self.model.eval()
         F1_Score = BinaryF1Score().to(self.config["device"])
         Confusion_Matrix = BinaryConfusionMatrix().to(self.config["device"])
@@ -244,3 +246,12 @@ class Trainer:
             png_overlay_path = f'{patient_folder}/{img_num}_overlay.png'
             image_overlay.save(png_overlay_path)
             
+
+
+
+    def _load_best_model(self):
+        try:
+            self.model.load_state_dict(torch.load(f'{self.export_root}/best_model.pth'))
+            self.model.to(self.device)
+        except:
+            print('Failed to load best model, continue testing with current model...')
