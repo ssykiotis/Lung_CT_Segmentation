@@ -267,12 +267,12 @@ class ResUnetPlusPlus(nn.Module):
 
         b1 = self.b1(c7)
 
-        d1 = self.d1(c7, b1)
-        d2 = self.d2(c6, d1)
-        d3 = self.d3(c5, d2)
-        d4 = self.d4(c4, d3)
-        d5 = self.d5(c3, d4)
-        d6 = self.d6(c2, d5)
+        d1 = self.d1(c6, b1)
+        d2 = self.d2(c5, d1)
+        d3 = self.d3(c4, d2)
+        d4 = self.d4(c3, d3)
+        d5 = self.d5(c2, d4)
+        d6 = self.d6(c1, d5)
 
         output = self.aspp(d6)
         output = self.output(output)
