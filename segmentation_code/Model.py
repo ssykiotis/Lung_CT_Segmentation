@@ -233,21 +233,22 @@ class ResUnetPlusPlus(nn.Module):
     def __init__(self):
         super().__init__()
 
-        self.c1 = Stem_Block(   1,   16, stride = 1)
-        self.c2 = ResNet_Block(16,   32, stride = 2)
-        self.c3 = ResNet_Block(32,   64, stride = 2)
-        self.c4 = ResNet_Block(64,  128, stride = 2)
-        self.c5 = ResNet_Block(128, 256, stride = 2)
-        self.c6 = ResNet_Block(256, 512, stride = 2)
+        self.c1 = Stem_Block(   1,   16,  stride = 1)
+        self.c2 = ResNet_Block(16,   32,  stride = 2)
+        self.c3 = ResNet_Block(32,   64,  stride = 2)
+        self.c4 = ResNet_Block(64,  128,  stride = 2)
+        self.c5 = ResNet_Block(128, 256,  stride = 2)
+        self.c6 = ResNet_Block(256, 512,  stride = 2)
+        self.c7 = ResNet_Block(512, 1024, stride = 2)
 
-        self.b1 = ASPP(512, 1024)
+        self.b1 = ASPP(1024, 2048)
 
-        self.d1 = Decoder_Block([256, 1024], 512)
-        self.d2 = Decoder_Block([128,  512], 256)
-        self.d3 = Decoder_Block([ 64,  256], 128)
-        self.d4 = Decoder_Block([ 32,  128],  64)
-        self.d5 = Decoder_Block([ 16,   64],  32)
-        # self.d6 = Decoder_Block([ 16,   32],   32)
+        self.d1 = Decoder_Block([512, 2048], 1024)
+        self.d2 = Decoder_Block([256, 1024],  512)
+        self.d3 = Decoder_Block([128,  512],  256)
+        self.d4 = Decoder_Block([ 64,  256],  128)
+        self.d5 = Decoder_Block([ 32,  128],   64)
+        self.d6 = Decoder_Block([ 16,   64],   32)
 
         self.aspp = ASPP(32, 16)
 
@@ -262,16 +263,18 @@ class ResUnetPlusPlus(nn.Module):
         c4 = self.c4(c3)
         c5 = self.c5(c4)
         c6 = self.c6(c5)
+        c7 = self.c7(c6)
 
-        b1 = self.b1(c6)
+        b1 = self.b1(c7)
 
-        d1 = self.d1(c5, b1)
-        d2 = self.d2(c4, d1)
-        d3 = self.d3(c3, d2)
-        d4 = self.d4(c2, d3)
-        d5 = self.d5(c1, d4)
+        d1 = self.d1(c6, b1)
+        d2 = self.d1(c5, d1)
+        d3 = self.d2(c4, d2)
+        d4 = self.d3(c3, d3)
+        d5 = self.d4(c2, d4)
+        d6 = self.d5(c1, d5)
 
-        output = self.aspp(d5)
+        output = self.aspp(d6)
         output = self.output(output)
         output = self.act_out(output)
 
