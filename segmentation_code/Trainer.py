@@ -249,9 +249,10 @@ class Trainer:
 
 
 
-    def _load_best_model(self):
+    def load_best_model(self):
         try:
             self.model.load_state_dict(torch.load(f'{self.export_root}/best_model.pth'))
             self.model.to(self.device)
+            print('Model loaded successfully')
         except:
             print('Failed to load best model, continue testing with current model...')
