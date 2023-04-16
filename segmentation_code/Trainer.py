@@ -99,6 +99,7 @@ class Trainer:
                 y       = y.to(self.config["device"]).to(torch.float32)                
             
                 y_hat   = self.model(x)
+                y_hat   = torch.round(y_hat)
 
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
@@ -130,6 +131,7 @@ class Trainer:
                 y       = y.to(self.config["device"]).to(torch.float32)                
             
                 y_hat   = self.model(x)
+                y_hat   = torch.round(y_hat)
 
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
