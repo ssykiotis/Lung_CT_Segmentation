@@ -12,7 +12,8 @@ class DataParser:
     def __init__(self,config):
         self.config = config
 
-        self.patient_paths = self.get_patient_paths(self.config["vendor"])
+        self.patient_paths = self.get_patient_paths()
+        # self.patient_paths = self.get_patient_paths(self.config["vendor"])
         
 
         
