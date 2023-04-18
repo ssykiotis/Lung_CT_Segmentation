@@ -9,7 +9,7 @@ import torch.optim      as optim
 from Model                       import *
 from PIL                         import Image
 from tqdm                        import tqdm
-from loss                        import BCEDiceLoss
+from loss                        import DiceLoss,FocalLoss
 from torchmetrics.classification import BinaryF1Score
 from torchmetrics.classification import BinaryConfusionMatrix
 
@@ -38,7 +38,7 @@ class Trainer:
 
         self.export_root = self.config['export_root']
 
-        self.loss_fn = BCEDiceLoss()
+        self.loss_fn = FocalLoss()
         self.optimizer = self.create_optimizer()
 
         if config['enable_lr_schedule']:
@@ -229,7 +229,7 @@ class Trainer:
 
             png_image = Image.fromarray(img_norm)
             png_path  = f'{patient_folder}/{img_num}_original.png'
-            png_image.save(png_path)
+            # png_image.save(png_path)
 
             mask    = y_hat[i].astype('uint8')
             mask_gt = y[i].astype('uint8')
@@ -241,7 +241,7 @@ class Trainer:
 
             png_mask = Image.fromarray(mask_rgb,mode = 'RGB')
             mask_path = f'{patient_folder}/{img_num}_masks.png'
-            png_mask.save(mask_path)
+            # png_mask.save(mask_path)
 
             png_image_rgb = png_image.convert(mode = 'RGB')
             image_overlay = Image.blend(png_image_rgb, png_mask, 0.3)
