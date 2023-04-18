@@ -41,7 +41,7 @@ class Trainer:
         # alpha = self.train_dl.dataset.y.sum()/torch.prod(torch.tensor(self.train_dl.dataset.y.shape))
 
         self.loss_fn = FocalLoss(alpha = 0.25)
-        print(f'Alpha: {alpha}')
+        # print(f'Alpha: {alpha}')
         self.optimizer = self.create_optimizer()
 
         if config['enable_lr_schedule']:
