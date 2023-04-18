@@ -38,7 +38,7 @@ class Trainer:
 
         self.export_root = self.config['export_root']
 
-        alpha = torch.prod(torch.tensor(self.train_dl.dataset.y.shape))/self.train_dl.dataset.y.sum()
+        alpha = self.train_dl.dataset.y.sum()/torch.prod(torch.tensor(self.train_dl.dataset.y.shape))
 
         self.loss_fn = FocalLoss(alpha = alpha)
         print(f'Alpha: {alpha}')
