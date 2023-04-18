@@ -6,7 +6,7 @@
     "batch_size"            : 16,
     "num_epochs"            : 100,
     "seed"                  : 0, 
-    "training_percent"      : 0.8,
+    "training_percent"      : 0.9,
     "img_size"              : 256,
     "crop_buffer"           : 20,
     "enable_lr_schedule"    : 1,
