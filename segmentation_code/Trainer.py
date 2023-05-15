@@ -23,6 +23,8 @@ class Trainer:
         self.ds_parser = ds_parser
 
         self.train_dl = self.get_dataloader("train")
+        print(f"Xmin: {self.train_dl.dataset.x_min}")
+        print(f"Xmax: {self.train_dl.dataset.x_max}")
         self.val_dl   = self.get_dataloader("val")
 
         self.epochs   = self.config["num_epochs"]
