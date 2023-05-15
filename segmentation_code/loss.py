@@ -58,15 +58,15 @@ class FocalTverskyLoss(nn.Module):
         self.smooth = smooth
     
     def tversky_index(self,y_true, y_pred):
-        y_true_pos = y_true.view(-1)
-        y_pred_pos = ((y_pred>=0.5)*1).view(-1)
+        y_true_pos = y_true.reshape(-1)
+        y_pred_pos = ((y_pred>=0.5)*1).reshape(-1)
 
         tp = (y_true_pos * y_pred_pos).sum()
         fn = (y_true_pos * (1 - y_pred_pos)).sum()
         fp = ((1 - y_true_pos) * y_pred_pos).sum()
 
         nom = tp + self.smooth
-        den = tp = self.alpha*fn +(1-self.alpha)*fp +self.smooth
+        den = tp + self.alpha*fn +(1-self.alpha)*fp +self.smooth
 
         return nom/den
         

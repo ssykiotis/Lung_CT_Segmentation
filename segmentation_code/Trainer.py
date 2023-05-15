@@ -111,7 +111,6 @@ class Trainer:
                 f1_mean = F1_Score.compute()
 
                 tqdm_dataloader.set_description('Validation, F1 {:.2f}'.format(f1_mean))
-
         return f1_mean
 
     def test(self):
@@ -154,13 +153,9 @@ class Trainer:
 
                 tqdm_dataloader.set_description('Test, F1 {:.2f}'.format(f1_mean))
 
-            
-
         results.to_csv(f'{self.export_root}/results.csv')
 
         return f1_mean
-
-
 
     def get_dataloader(self,mode):
 
@@ -253,9 +248,6 @@ class Trainer:
             image_overlay = Image.blend(png_image_rgb, png_mask, 0.3)
             png_overlay_path = f'{patient_folder}/{img_num}_overlay.png'
             image_overlay.save(png_overlay_path)
-            
-
-
 
     def load_best_model(self):
         try:
