@@ -50,3 +50,28 @@ class FocalLoss(nn.Module):
             )
         return loss
         
+class FocalTverskyLoss(nn.Module):
+    def __init__(self,alpha = 0.7, gamma = 3/4, smooth = 1):
+        super().__init__()
+        self.alpha  = alpha
+        self.gamma  = gamma
+        self.smooth = smooth
+    
+    def tversky_index(self,y_true, y_pred):
+        y_true_pos = y_true.view(-1)
+        y_pred_pos = ((y_pred>=0.5)*1).view(-1)
+
+        tp = (y_true_pos * y_pred_pos).sum()
+        fn = (y_true_pos * (1 - y_pred_pos)).sum()
+        fp = ((1 - y_true_pos) * y_pred_pos).sum()
+
+        nom = tp + self.smooth
+        den = tp = self.alpha*fn +(1-self.alpha)*fp +self.smooth
+
+        return nom/den
+        
+    def forward(self,y_true, y_pred):
+        tversky_index = self.tversky_index(y_true,y_pred)
+
+        return (1-tversky_index)**self.gamma
+

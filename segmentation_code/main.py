@@ -37,9 +37,7 @@ if __name__ == "__main__":
 
     #parse dataset
     ds_parser = DataParser(config)
-
-    
-    trainer = Trainer(config,ds_parser)
+    trainer   = Trainer(config,ds_parser)
 
     if config["mode"] =="train":
         start = time()

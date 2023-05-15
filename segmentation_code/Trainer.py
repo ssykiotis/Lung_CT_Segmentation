@@ -9,7 +9,7 @@ import torch.optim      as optim
 from Model                       import *
 from PIL                         import Image
 from tqdm                        import tqdm
-from loss                        import DiceLoss,FocalLoss
+from loss                        import DiceLoss, FocalLoss, FocalTverskyLoss
 from torchmetrics.classification import BinaryF1Score
 from torchmetrics.classification import BinaryConfusionMatrix
 
@@ -23,8 +23,8 @@ class Trainer:
         self.ds_parser = ds_parser
 
         self.train_dl = self.get_dataloader("train")
-        print(f"Xmin: {self.train_dl.dataset.x_min}")
-        print(f"Xmax: {self.train_dl.dataset.x_max}")
+        # print(f"Xmin: {self.train_dl.dataset.x_min}")
+        # print(f"Xmax: {self.train_dl.dataset.x_max}")
         self.val_dl   = self.get_dataloader("val")
 
         self.epochs   = self.config["num_epochs"]
@@ -42,7 +42,8 @@ class Trainer:
 
         # alpha = self.train_dl.dataset.y.sum()/torch.prod(torch.tensor(self.train_dl.dataset.y.shape))
 
-        self.loss_fn = FocalLoss(alpha = 0.25,gamma = 5)
+        # self.loss_fn = FocalLoss(alpha = 0.25,gamma = 5)
+        self.loss_fn = FocalTverskyLoss()
         # print(f'Alpha: {alpha}')
         self.optimizer = self.create_optimizer()
 
