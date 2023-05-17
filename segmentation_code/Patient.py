@@ -120,7 +120,7 @@ class Patient:
         else:
             lung_seg = mask.apply(self.imgs.astype(np.float32), self.lung_seg_model, batch_size = 32)
 
-        lung_seg[lung_seg!=0] = 1
+        # lung_seg[lung_seg!=0] = 1
 
         if self.metadata["orientation"] == 'HFS':
             lesion_seg = lesion_seg[::-1,:,:]

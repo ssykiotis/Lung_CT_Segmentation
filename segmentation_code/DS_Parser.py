@@ -17,7 +17,7 @@ class DataParser:
         
 
         
-        self.patient_paths = self.patient_paths
+        self.patient_paths = self.patient_paths[:10]
         self.train_patients,self.val_patients,self.test_patients = self.train_test_split()
 
     def get_dataset(self,mode):
@@ -32,24 +32,30 @@ class DataParser:
 
         if mode == "train":
 
-            x, y, img_names = self.parse_patients(self.train_patients, keeponly = True)
+            x, y, img_names, flags = self.parse_patients(self.train_patients, keeponly = True)
             dataset         = Dataset(self.config,
                                       x,
                                       y,
-                                      img_names
+                                      img_names,
+                                      flags
                                      )
 
             self.x_min, self.x_max = dataset.get_minmax()
         else:
             if mode=='val':
-                x, y, img_names = self.parse_patients(self.val_patients, keeponly = False)
+                x, y, img_names, flags = self.parse_patients(self.val_patients, keeponly = False)
             else:
-                x, y, img_names = self.parse_patients(self.test_patients, keeponly = False)
+                x, y, img_names, flags = self.parse_patients(self.test_patients, keeponly = False)
+
+            x_train, _, _, _ = self.parse_patients(self.train_patients, keeponly = True)
+            self.x_min = np.min(x_train)
+            self.x_max = np.max(x_train)
 
             dataset   = Dataset(self.config,
                                 x,
                                 y,
                                 img_names,
+                                flags,
                                 self.x_min,
                                 self.x_max
                                 )
@@ -68,23 +74,24 @@ class DataParser:
         instance_seg_model = mask.get_model('unet','R231CovidWeb')
         instance_seg_model = instance_seg_model.to('cuda:0')
 
-        x, y ,img_names = [], [], []
-        l = len(patients_path)
+        x, y ,img_names, flags = [], [], [], []
         for patient in patients_path:
             try:
                 pat = Patient(patient,instance_seg_model)
-                x_i,y_i,img_names_i = self.format(pat,keeponly)
+                x_i,y_i,img_names_i,flag_i = self.format(pat,keeponly)
                 x.append(x_i)
                 y.append(y_i)
                 img_names.append(img_names_i)
+                flags.append(flag_i)
             except InvalidPatientError:
                 print(f'Patient {patient} excluded: not consistent data lengths')
                 continue
         x         = np.concatenate(x)
         y         = np.concatenate(y) 
         img_names = np.concatenate(img_names)
+        flags     = np.concatenate(flags)
 
-        return x, y, img_names
+        return x, y, img_names,flags
 
 
     def format(self,pat,keeponly = False):
@@ -99,6 +106,7 @@ class DataParser:
         x         = []
         y         = []
         img_names = []
+        flags     = []
 
         if keeponly:
             idxs_to_keep = np.where(pat.lesion_seg.sum(axis = (1,2)))[0]
@@ -106,8 +114,16 @@ class DataParser:
             idxs_to_keep = list(range(pat.imgs.shape[0]))
 
         for idx in idxs_to_keep:
-            max_values = np.amax(pat.lung_seg[idx])
-            result = np.where(pat.lung_seg[idx] == max_values)
+           
+            lung_seg = pat.lung_seg[idx]
+            if keeponly:
+                flag = True
+            else:
+                flag = np.unique(lung_seg)==[0,1,2]
+            lung_seg[lung_seg>0] = 1
+            max_values = np.amax(lung_seg)
+            
+            result = np.where(lung_seg == max_values)
             x1 = np.min(result[0]) - self.config["crop_buffer"]
             x2 = np.max(result[0]) + self.config["crop_buffer"]
             y1 = np.min(result[1]) - self.config["crop_buffer"]
@@ -122,7 +138,7 @@ class DataParser:
                                      dsize = dim,
                                      interpolation = cv2.INTER_CUBIC)
             
-            img_resized = img_resized.astype(np.float32)
+            img_resized = img_resized.astype(np.float16)
             
             mask_cropped = pat.lesion_seg[idx,x1:x2,y1:y2]
             mask_cropped = mask_cropped.astype(np.float32)
@@ -137,11 +153,12 @@ class DataParser:
             x.append(np.expand_dims(img_resized,  axis = (0, 1)))
             y.append(np.expand_dims(mask_resized, axis = (0, 1)))
             img_names.append(pat.img_names[idx])
+            flags.append(flag)
 
         x = np.concatenate(x, axis = 0)
         y = np.concatenate(y, axis = 0)
 
-        return x, y, img_names
+        return x, y, img_names, flags
 
     
     def train_test_split(self):

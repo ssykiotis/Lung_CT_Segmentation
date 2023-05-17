@@ -79,7 +79,7 @@ class Trainer:
 
         for _,batch in enumerate(tqdm_dataloader):
 
-            x, y, _ = batch
+            x, y, _,_ = batch
             x       = x.to(self.config["device"])
             y       = y.to(self.config["device"]).to(torch.float16)
 
@@ -106,13 +106,15 @@ class Trainer:
         with torch.no_grad():
             tqdm_dataloader = tqdm(self.val_dl)
             for _,batch in enumerate(tqdm_dataloader):
-                x, y, _ = batch 
+                x, y, _ ,flag = batch 
                 x       = x.to(self.config["device"])
-                y       = y.to(self.config["device"]).to(torch.float16)                
-            
+                y       = y.to(self.config["device"]).to(torch.float16)   
+          
                 with torch.cuda.amp.autocast():
                     y_hat   = self.model(x)
                     y_hat   = torch.round(y_hat)
+
+                y_hat[flag!=1] = 0
 
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
@@ -138,13 +140,16 @@ class Trainer:
 
         with torch.no_grad():
             for _,batch in enumerate(tqdm_dataloader):
-                x, y, names = batch 
+                x, y, names,flag = batch 
                 x       = x.to(self.config["device"])
                 y       = y.to(self.config["device"]).to(torch.float16)                
                 
                 with torch.cuda.amp.autocast():
                     y_hat   = self.model(x)
                     y_hat   = torch.round(y_hat)
+                
+                y_hat[flag!=1] = 0
+
 
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
