@@ -6,6 +6,10 @@ import cv2
 from lungmask import mask
 import pandas as pd
 
+class InvalidPatientError(Exception):
+    "Raised when the image, lung and lesion arrays do not have the same length"
+    pass
+
 
 class DataParser:
 
@@ -71,11 +75,14 @@ class DataParser:
         x, y ,img_names = [], [], []
         l = len(patients_path)
         for patient in patients_path:
-            pat = Patient(patient,instance_seg_model)
-            x_i,y_i,img_names_i = self.format(pat,keeponly)
-            x.append(x_i)
-            y.append(y_i)
-            img_names.append(img_names_i)
+            try:
+                pat = Patient(patient,instance_seg_model)
+                x_i,y_i,img_names_i = self.format(pat,keeponly)
+                x.append(x_i)
+                y.append(y_i)
+                img_names.append(img_names_i)
+            except InvalidPatientError:
+                print(f'Patient {patient} excluded: not consistent data lengths')
 
         x         = np.concatenate(x)
         y         = np.concatenate(y) 
@@ -103,14 +110,7 @@ class DataParser:
             idxs_to_keep = list(range(pat.imgs.shape[0]))
 
         for idx in idxs_to_keep:
-            try:
-                max_values = np.amax(pat.lung_seg[idx])
-            except IndexError:
-                print(pat.path)
-                print('Images:',    pat.imgs.shape)
-                print('Lung Seg:',  pat.lung_seg.shape)
-                print('Lesion Seg:',pat.lesion_seg.shape)
-                raise IndexError
+            max_values = np.amax(pat.lung_seg[idx])
             result = np.where(pat.lung_seg[idx] == max_values)
             x1 = np.min(result[0]) - self.config["crop_buffer"]
             x2 = np.max(result[0]) + self.config["crop_buffer"]

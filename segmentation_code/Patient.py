@@ -7,6 +7,10 @@ import numpy as np
 from pydicom.pixel_data_handlers.util import apply_modality_lut
 from lungmask import mask
 
+class InvalidPatientError(Exception):
+    "Raised when the image, lung and lesion arrays do not have the same length"
+    pass
+
 class Patient:
 
     def __init__(self,path,instance_seg = None):
@@ -24,6 +28,10 @@ class Patient:
         self.img_names   = self.get_image_names()
 
         self.lung_seg,self.lesion_seg = self.read_segmentations()
+
+        consistent_dimensions = (self.imgs.shape==self.lung_seg.shape) and (self.imgs.shape == self.lesion_seg.shape)
+        if not consistent_dimensions:
+            raise InvalidPatientError
 
     
     def parse_images(self):
@@ -80,7 +88,7 @@ class Patient:
 
             imgs[idx-1] = pixel_data
 
-        return imgs.astype(np.float32)
+        return imgs.astype(np.float16)
 
         
 
