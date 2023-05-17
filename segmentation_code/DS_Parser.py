@@ -119,7 +119,7 @@ class DataParser:
             if keeponly:
                 flag = 1
             else:
-                flag = (np.unique(lung_seg)==[0,1,2])*1
+                flag = ((np.unique(lung_seg)==[0,1,2])).all()*1
             lung_seg[lung_seg>0] = 1
             max_values = np.amax(lung_seg)
             
