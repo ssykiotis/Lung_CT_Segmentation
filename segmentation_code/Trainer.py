@@ -57,7 +57,7 @@ class Trainer:
                                                          )
 
     def train(self):
-        loss_monitoring = dict{}
+        loss_monitoring = dict()
         best_f1,_ = self.validate()
         self.save_model()
         self.best_epoch = 0
