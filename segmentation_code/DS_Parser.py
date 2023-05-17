@@ -117,9 +117,9 @@ class DataParser:
            
             lung_seg = pat.lung_seg[idx]
             if keeponly:
-                flag = True
+                flag = 1
             else:
-                flag = np.unique(lung_seg)==[0,1,2]
+                flag = (np.unique(lung_seg)==[0,1,2])*1
             lung_seg[lung_seg>0] = 1
             max_values = np.amax(lung_seg)
             
