@@ -73,7 +73,7 @@ class Trainer:
                 best_f1 = f1
                 self.best_epoch = epoch+1
                 self.save_model()
-        losses = pd.DataFrme.from_dict(loss_monitoring)
+        losses = pd.DataFrame.from_dict(loss_monitoring)
         losses.to_csv(f'{self.export_root}/loss_monitoring.csv')
 
     def train_one_epoch(self,epoch):
