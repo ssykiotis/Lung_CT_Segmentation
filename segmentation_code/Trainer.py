@@ -31,7 +31,7 @@ class Trainer:
         self.lr       = self.config["learning_rate"]
 
         self.model    = ResUnetPlusPlus()
-        self.model    = self.model.to(self.config["device"]).to(torch.float32)
+        self.model    = self.model.to(self.config["device"]).to(torch.float16)
         flops, params = get_model_complexity_info(self.model, input_res=(1, 256, 256), as_strings=True, print_per_layer_stat=False)
         print('      - Flops:  ' + flops)
         print('      - Params: ' + params)
@@ -46,6 +46,7 @@ class Trainer:
         self.loss_fn = FocalTverskyLoss()
         # print(f'Alpha: {alpha}')
         self.optimizer = self.create_optimizer()
+        self.scaler    = torch.cuda.amp.GradScaler()
 
         if config['enable_lr_schedule']:
             self.lr_scheduler = optim.lr_scheduler.StepLR(self.optimizer,
@@ -78,15 +79,18 @@ class Trainer:
 
             x, y, _ = batch
             x       = x.to(self.config["device"])
-            y       = y.to(self.config["device"]).to(torch.float32)
+            y       = y.to(self.config["device"]).to(torch.float16)
+
+            with torch.cuda.amp.autocast():
+                y_hat = self.model(x)
+                loss  = self.loss_fn(y_hat,y)
 
             self.optimizer.zero_grad()
-
-            y_hat = self.model(x)
-            loss  = self.loss_fn(y_hat,y)
             
-            loss.backward()
-            self.optimizer.step()
+            self.scaler.scale(loss).backward()
+            self.scaler.step(self.optimizer)
+            self.scaler.update()
+            # self.optimizer.step()
 
             loss_values.append(loss.item())
             average_loss = np.mean(np.array(loss_values))
@@ -102,10 +106,11 @@ class Trainer:
             for _,batch in enumerate(tqdm_dataloader):
                 x, y, _ = batch 
                 x       = x.to(self.config["device"])
-                y       = y.to(self.config["device"]).to(torch.float32)                
+                y       = y.to(self.config["device"]).to(torch.float16)                
             
-                y_hat   = self.model(x)
-                y_hat   = torch.round(y_hat)
+                with torch.cuda.amp.autocast():
+                    y_hat   = self.model(x)
+                    y_hat   = torch.round(y_hat)
 
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
@@ -133,10 +138,11 @@ class Trainer:
             for _,batch in enumerate(tqdm_dataloader):
                 x, y, names = batch 
                 x       = x.to(self.config["device"])
-                y       = y.to(self.config["device"]).to(torch.float32)                
-            
-                y_hat   = self.model(x)
-                y_hat   = torch.round(y_hat)
+                y       = y.to(self.config["device"]).to(torch.float16)                
+                
+                with torch.cuda.amp.autocast():
+                    y_hat   = self.model(x)
+                    y_hat   = torch.round(y_hat)
 
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
