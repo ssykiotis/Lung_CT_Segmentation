@@ -32,7 +32,8 @@ class Trainer:
         self.lr       = self.config["learning_rate"]
 
         self.model    = ResUnetPlusPlus()
-        self.model    = self.model.to(self.config["device"]).to(torch.float16)
+        self.model    = self.model.to(self.config["device"])
+        # self.model    = self.model.to(self.config["device"]).to(torch.float16)
         flops, params = get_model_complexity_info(self.model, input_res=(1, 256, 256), as_strings=True, print_per_layer_stat=False)
         print('      - Flops:  ' + flops)
         print('      - Params: ' + params)
