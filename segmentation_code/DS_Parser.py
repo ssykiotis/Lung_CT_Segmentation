@@ -6,10 +6,6 @@ import cv2
 from lungmask import mask
 import pandas as pd
 
-class InvalidPatientError(Exception):
-    "Raised when the image, lung and lesion arrays do not have the same length"
-    pass
-
 
 class DataParser:
 
@@ -83,7 +79,7 @@ class DataParser:
                 img_names.append(img_names_i)
             except InvalidPatientError:
                 print(f'Patient {patient} excluded: not consistent data lengths')
-
+                continue
         x         = np.concatenate(x)
         y         = np.concatenate(y) 
         img_names = np.concatenate(img_names)
