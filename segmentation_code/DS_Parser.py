@@ -103,7 +103,14 @@ class DataParser:
             idxs_to_keep = list(range(pat.imgs.shape[0]))
 
         for idx in idxs_to_keep:
-            max_values = np.amax(pat.lung_seg[idx])
+            try:
+                max_values = np.amax(pat.lung_seg[idx])
+            except IndexError:
+                print(pat.path)
+                print('Images:',    pat.imgs.shape)
+                print('Lung Seg:',  pat.lung_seg.shape)
+                print('Lesion Seg:',pat.lesion_seg.shape)
+                raise IndexError
             result = np.where(pat.lung_seg[idx] == max_values)
             x1 = np.min(result[0]) - self.config["crop_buffer"]
             x2 = np.max(result[0]) + self.config["crop_buffer"]
