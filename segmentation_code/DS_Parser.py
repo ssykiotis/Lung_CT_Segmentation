@@ -15,9 +15,7 @@ class DataParser:
         self.patient_paths = self.get_patient_paths()
         # self.patient_paths = self.get_patient_paths(self.config["vendor"])
         
-
-        
-        self.patient_paths = self.patient_paths[:10]
+        self.patient_paths = self.patient_paths
         self.train_patients,self.val_patients,self.test_patients = self.train_test_split()
 
     def get_dataset(self,mode):

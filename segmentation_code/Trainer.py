@@ -73,7 +73,7 @@ class Trainer:
                 best_f1 = f1
                 self.best_epoch = epoch+1
                 self.save_model()
-        losses = pd.DataFrame.from_dict(loss_monitoring)
+        losses = pd.DataFrame.from_dict(loss_monitoring, orient = 'index')
         losses.to_csv(f'{self.export_root}/loss_monitoring.csv')
 
     def train_one_epoch(self,epoch):
@@ -173,7 +173,7 @@ class Trainer:
 
                     results.loc[names[i]] = (tn, fp, fn, tp)
 
-                    self.export_images(x,y_hat,y,names)
+                self.export_images(x,y_hat,y,names)
 
                 tqdm_dataloader.set_description('Test, F1 {:.2f}'.format(f1_mean))
 
