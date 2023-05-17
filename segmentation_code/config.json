@@ -3,7 +3,7 @@
     "metadata_location"     : "../metadata.csv",
     "export_root"           : "../results",
     "mode"                  : "train",
-    "batch_size"            : 32,
+    "batch_size"            : 30,
     "num_epochs"            : 100,
     "seed"                  : 0, 
     "training_percent"      : 0.9,
