@@ -23,8 +23,9 @@ class Trainer:
         self.ds_parser = ds_parser
 
         self.train_dl = self.get_dataloader("train")
-        # print(f"Xmin: {self.train_dl.dataset.x_min}")
-        # print(f"Xmax: {self.train_dl.dataset.x_max}")
+        print(len("Training Set Length:",self.train_dl.dataset))
+        print('First image:', self.train_dl.dataset.img_names[0])
+ 
         self.val_dl   = self.get_dataloader("val")
 
         self.epochs   = self.config["num_epochs"]
