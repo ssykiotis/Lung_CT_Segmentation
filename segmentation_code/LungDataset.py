@@ -13,7 +13,6 @@ class Dataset(data_utils.Dataset):
         self.y         = y
         self.img_names = img_names
         self.flags     = flags
-        print(flags)
 
         self.x_min = x_min if x_min else np.min(self.x)
         self.x_max = x_max if x_max else np.max(self.x)

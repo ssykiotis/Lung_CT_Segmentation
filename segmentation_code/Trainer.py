@@ -57,13 +57,15 @@ class Trainer:
                                                          )
 
     def train(self):
-        best_f1 = self.validate()
+        loss_monitoring = dict{}
+        best_f1,_ = self.validate()
         self.save_model()
         self.best_epoch = 0
 
         for epoch in range(self.epochs):
-            self.train_one_epoch(epoch+1)
-            f1 = self.validate()
+            train_loss = self.train_one_epoch(epoch+1)
+            f1, val_loss = self.validate()
+            loss_monitoring[epoch+1] = [train_loss,val_loss]
             if self.lr_scheduler:
                 self.lr_scheduler.step()
 
@@ -71,6 +73,8 @@ class Trainer:
                 best_f1 = f1
                 self.best_epoch = epoch+1
                 self.save_model()
+        losses = pd.DataFrme.from_dict(loss_monitoring)
+        losses.to_csv(f'{self.export_root}/loss_monitoring.csv')
 
     def train_one_epoch(self,epoch):
         loss_values     = []
@@ -98,10 +102,12 @@ class Trainer:
             average_loss = np.mean(np.array(loss_values))
 
             tqdm_dataloader.set_description('Epoch {}, loss {:.2f}'.format(epoch, average_loss))
+        return average_loss
     
     
     def validate(self):
         self.model.eval()
+        loss_values = []
         F1_Score = BinaryF1Score().to(self.config["device"])
         with torch.no_grad():
             tqdm_dataloader = tqdm(self.val_dl)
@@ -113,14 +119,19 @@ class Trainer:
                 with torch.cuda.amp.autocast():
                     y_hat   = self.model(x)
                     y_hat   = torch.round(y_hat)
+                    loss  = self.loss_fn(y_hat,y)
 
                 y_hat[flag!=1] = 0
 
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
 
+                loss_values.append(loss.item())
+
                 tqdm_dataloader.set_description('Validation, F1 {:.2f}'.format(f1_mean))
-        return f1_mean
+        average_loss = np.mean(np.array(loss_values))
+
+        return f1_mean, average_loss
 
     def test(self):
 

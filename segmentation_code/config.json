@@ -4,7 +4,7 @@
     "export_root"           : "../results",
     "mode"                  : "train",
     "batch_size"            : 30,
-    "num_epochs"            : 100,
+    "num_epochs"            : 2,
     "seed"                  : 0, 
     "training_percent"      : 0.9,
     "img_size"              : 256,
