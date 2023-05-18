@@ -87,11 +87,12 @@ class Trainer:
             x       = x.to(self.config["device"])
             y       = y.to(self.config["device"]).to(torch.float16)
 
+            self.optimizer.zero_grad()
+
             with torch.cuda.amp.autocast():
                 y_hat = self.model(x)
                 loss  = self.loss_fn(y_hat,y)
 
-            self.optimizer.zero_grad()
             
             self.scaler.scale(loss).backward()
             self.scaler.step(self.optimizer)
