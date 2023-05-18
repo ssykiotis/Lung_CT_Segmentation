@@ -98,7 +98,10 @@ class Trainer:
             self.scaler.update()
             # self.optimizer.step()
 
-            loss_values.append(loss.item())
+            self.optimizer.zero_grad()
+
+            if not torch.isnan(loss):
+                loss_values.append(loss.item())
             average_loss = np.mean(np.array(loss_values))
 
             tqdm_dataloader.set_description('Epoch {}, loss {:.2f}'.format(epoch, average_loss))
@@ -126,7 +129,8 @@ class Trainer:
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
 
-                loss_values.append(loss.item())
+                if not torch.isnan(loss):
+                    loss_values.append(loss.item())
                 
                 loss_mean = np.mean(np.array(loss_values))
                 tqdm_dataloader.set_description('Validation, F1 {:.2f}, Loss {:.2f}'.format(f1_mean,loss_mean))
