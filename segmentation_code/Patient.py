@@ -88,7 +88,7 @@ class Patient:
 
             imgs[idx-1] = pixel_data
 
-        return imgs.astype(np.float16)
+        return imgs.astype(np.float32)
 
         
 

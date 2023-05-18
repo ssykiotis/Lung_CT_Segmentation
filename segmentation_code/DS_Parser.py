@@ -136,7 +136,7 @@ class DataParser:
                                      dsize = dim,
                                      interpolation = cv2.INTER_CUBIC)
             
-            img_resized = img_resized.astype(np.float16)
+            img_resized = img_resized.astype(np.float32)
             
             mask_cropped = pat.lesion_seg[idx,x1:x2,y1:y2]
             mask_cropped = mask_cropped.astype(np.float32)
