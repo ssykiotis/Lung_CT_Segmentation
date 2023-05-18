@@ -127,11 +127,11 @@ class Trainer:
                 f1_mean = F1_Score.compute()
 
                 loss_values.append(loss.item())
+                
+                loss_mean = np.mean(np.array(loss_values))
+                tqdm_dataloader.set_description('Validation, F1 {:.2f}, Loss {:.2f}'.format(f1_mean,loss_mean))
 
-                tqdm_dataloader.set_description('Validation, F1 {:.2f}'.format(f1_mean))
-        average_loss = np.mean(np.array(loss_values))
-
-        return f1_mean, average_loss
+        return f1_mean, loss_mean
 
     def test(self):
 
