@@ -199,6 +199,7 @@ class DataParser:
             eligible_patients  = [pat for pat in eligible_patients if pat in available_patients]
 
             patient_paths = sorted([f'{self.config["data_location"]}/{pat}' for pat in eligible_patients])
+            print(patient_paths)
 
         else:
             patient_paths = [f'{self.config["data_location"]}/{file}'\
