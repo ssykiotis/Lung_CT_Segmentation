@@ -194,6 +194,7 @@ class DataParser:
             clinical = clinical.query('Histology==@cancer_type')
 
             eligible_patients = [f'{self.config["data_location"]}/{patient}' for patient in clinical.PatientID]
+            print('Eligible', eligible patients)
             available_patients = [file for file in sorted(os.listdir(self.config["data_location"]))\
                                   if not file.startswith('.')]
             eligible_patients  = [pat for pat in eligible_patients if pat in available_patients]
