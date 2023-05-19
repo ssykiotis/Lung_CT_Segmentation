@@ -18,6 +18,13 @@ class DataParser:
         self.patient_paths = self.patient_paths
         self.train_patients,self.val_patients,self.test_patients = self.train_test_split()
 
+        print('Training Paths')
+        print(self.train_patients)
+        print("Validation_paths")
+        print(self.val_patients)
+        print("Test Paths")
+        print(self.test_patients)
+
     def get_dataset(self,mode):
         """
         returns parsed dataset that corresponds to the specified mode
