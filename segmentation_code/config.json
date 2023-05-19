@@ -1,6 +1,7 @@
 {
     "data_location"         : "../clean_data",
     "metadata_location"     : "../metadata.csv",
+    "clinical_location"     : "../clinical.csv",
     "export_root"           : "../results",
     "mode"                  : "train",
     "batch_size"            : 30,
