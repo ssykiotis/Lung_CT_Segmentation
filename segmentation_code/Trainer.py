@@ -117,7 +117,7 @@ class Trainer:
                 y_hat   = torch.round(y_hat)
                 loss  = self.loss_fn(y_hat,y)
 
-                y_hat[flag!=1] = 0
+                # y_hat[flag!=1] = 0 
 
                 f1      = F1_Score.update(y_hat, y)
                 f1_mean = F1_Score.compute()
