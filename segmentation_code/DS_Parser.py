@@ -193,7 +193,7 @@ class DataParser:
             clinical = pd.read_csv(self.config['clinical_location'])
             clinical = clinical.query('Histology==@cancer_type')
 
-            eligible_patients = [f'{self.config["data_location"]}/{patient}' for patient in clinical.PatientID]
+            eligible_patients = [patient for patient in clinical.PatientID]
             print('Eligible', eligible_patients)
             available_patients = [file for file in sorted(os.listdir(self.config["data_location"]))\
                                   if not file.startswith('.')]
