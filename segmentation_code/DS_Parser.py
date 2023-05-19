@@ -12,18 +12,12 @@ class DataParser:
     def __init__(self,config):
         self.config = config
 
-        self.patient_paths = self.get_patient_paths()
+        # self.patient_paths = self.get_patient_paths()
+        self.patient_paths = self.get_patient_paths(cancer_type = self.config['cancer_type'])
         # self.patient_paths = self.get_patient_paths(self.config["vendor"])
         
         self.patient_paths = self.patient_paths
         self.train_patients,self.val_patients,self.test_patients = self.train_test_split()
-
-        print('Training Paths')
-        print(self.train_patients)
-        print("Validation_paths")
-        print(self.val_patients)
-        print("Test Paths")
-        print(self.test_patients)
 
     def get_dataset(self,mode):
         """
@@ -184,7 +178,7 @@ class DataParser:
         return training_patients,val_patients,test_patients
     
 
-    def get_patient_paths(self,vendor = None):
+    def get_patient_paths(self,vendor = None, cancer_type = None):
         if vendor:
             metadata = pd.read_csv(self.config['metadata_location'])
             mod = 'CT'
@@ -195,6 +189,17 @@ class DataParser:
             eligible_patients  = [pat for pat in eligible_patients if pat in available_patients]
 
             patient_paths = sorted([f'{self.config["data_location"]}/{pat}' for pat in eligible_patients])
+        elif cancer_type:
+            clinical = pd.read_csv(self.config['clinical_location'])
+            clinical = clinical.query('Histology==@cancer_type')
+
+            eligible_patients = [f'{self.config["data_location"]}/{patient}' for patient in clinical.PatientID]
+            available_patients = [file for file in sorted(os.listdir(self.config["data_location"]))\
+                                  if not file.startswith('.')]
+            eligible_patients  = [pat for pat in eligible_patients if pat in available_patients]
+
+            patient_paths = sorted([f'{self.config["data_location"]}/{pat}' for pat in eligible_patients])
+
         else:
             patient_paths = [f'{self.config["data_location"]}/{file}'\
                             for file in sorted(os.listdir(self.config["data_location"]))\
