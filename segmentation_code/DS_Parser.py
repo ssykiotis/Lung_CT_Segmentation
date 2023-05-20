@@ -31,7 +31,7 @@ class DataParser:
 
         if mode == "train":
 
-            x, y, img_names, flags = self.parse_patients(self.train_patients, keeponly = True)
+            x, y, img_names, flags = self.parse_patients(self.train_patients, keeponly = False)
             dataset         = Dataset(self.config,
                                       x,
                                       y,
