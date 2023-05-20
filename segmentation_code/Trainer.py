@@ -45,7 +45,7 @@ class Trainer:
         # alpha = self.train_dl.dataset.y.sum()/torch.prod(torch.tensor(self.train_dl.dataset.y.shape))
 
         # self.loss_fn = FocalLoss(alpha = 0.25,gamma = 5)
-        self.loss_fn = FocalTverskyLoss()
+        self.loss_fn = DiceLoss()
         # print(f'Alpha: {alpha}')
         self.optimizer = self.create_optimizer()
 
