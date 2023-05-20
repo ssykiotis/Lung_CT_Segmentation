@@ -31,7 +31,7 @@ class DataParser:
 
         if mode == "train":
 
-            x, y, img_names, flags = self.parse_patients(self.train_patients, keeponly = False)
+            x, y, img_names, flags = self.parse_patients(self.train_patients, keeponly = True)
             dataset         = Dataset(self.config,
                                       x,
                                       y,
@@ -42,9 +42,9 @@ class DataParser:
             self.x_min, self.x_max = dataset.get_minmax()
         else:
             if mode=='val':
-                x, y, img_names, flags = self.parse_patients(self.val_patients, keeponly = False)
+                x, y, img_names, flags = self.parse_patients(self.val_patients, keeponly = True)
             else:
-                x, y, img_names, flags = self.parse_patients(self.test_patients, keeponly = False)
+                x, y, img_names, flags = self.parse_patients(self.test_patients, keeponly = True)
 
             x_train, _, _, _ = self.parse_patients(self.train_patients, keeponly = True)
             self.x_min = np.min(x_train)
