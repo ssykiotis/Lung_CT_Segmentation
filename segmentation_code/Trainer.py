@@ -176,7 +176,7 @@ class Trainer:
 
                 names = [f'{patient}/{i+1}' for i in range(x.shape[0])]
 
-                y_hat_post = postprocessing(y_hat.astype(np.uint8))
+                y_hat_post = postprocessing(y_hat.astype(np.uint8),skip_below = 2)
 
                 y_hat_post = torch.tensor(y_hat_post).to(torch.float32).to(self.config["device"])
                 y =  torch.tensor(y).to(torch.float32).to(self.config["device"])
@@ -198,6 +198,8 @@ class Trainer:
                 self.export_images(x, y_hat_post, y, names)
 
                 print(' Test, F2 {:.2f}'.format(f1_mean))
+        results.to_csv(f'{self.export_root}/results.csv')
+
 
 
 
