@@ -168,12 +168,12 @@ class Trainer:
                 for i, name in enumerate(names):
                     patient = patients.index(name.split('/')[0])
                     frame   = int(name.split('/')[1]) - 1
-                    
+
                     print(patient,frame,i)
 
-                    images_per_patient[patient][frame]       = x[i]
-                    predictions_per_patient[patient][frame]  = y_hat[i]
-                    ground_truth_per_patient[patient][frame] = y[i]
+                    images_per_patient[patient][frame]       = x[i].detach().cpu().numpy()
+                    predictions_per_patient[patient][frame]  = y_hat[i].detach().cpu().numpy()
+                    ground_truth_per_patient[patient][frame] = y[i].detach().cpu().numpy()
             
             for batch in zip(patients, images_per_patient, predictions_per_patient, ground_truth_per_patient):
                 patient, x, y_hat, y = batch
