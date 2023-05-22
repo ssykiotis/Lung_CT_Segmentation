@@ -164,9 +164,8 @@ class Trainer:
                 y_hat   = torch.round(y_hat)
 
                 for i,name in enumerate(names):
-                    print(name)
-                    patient = patients.index(name.split['/'][0])
-                    frame   = patient.split('/')[1] - 1
+                    patient = patients.index(name.split('/')[0])
+                    frame   = name.split('/')[1] - 1
 
                     predictions_per_patient[patient][frame]  = y_hat[i]
                     ground_truth_per_patient[patient][frame] = y[i]
