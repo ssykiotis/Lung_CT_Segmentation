@@ -164,7 +164,7 @@ class Trainer:
                 y_hat   = torch.round(y_hat)
 
                 for i,name in enumerate(names):
-                    patient = patients.index(patient.split['/'][0])
+                    patient = patients.index(name.split['/'][0])
                     frame   = patient.split('/')[1] - 1
 
                     predictions_per_patient[patient][frame]  = y_hat[i]
@@ -189,7 +189,7 @@ class Trainer:
                                  columns = ['img_names'])
 
         images['patient'] = images['img_names'].apply(lambda x:x.split('/')[0])
-        images_grouped = images.groupby('patient').count().reset_index()
+        images_grouped    = images.groupby('patient').count().reset_index()
 
         return images_grouped['patient'].values.tolist(), images_grouped['img_names'].values.tolist()
 
