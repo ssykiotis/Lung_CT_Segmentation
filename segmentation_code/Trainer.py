@@ -150,9 +150,9 @@ class Trainer:
         patients, num_frames = self.get_patient_frames(img_names)
         img_size = self.config['img_size']
 
-        images_per_patient       = [np.zeros(nframe,img_size,img_size) for nframe in num_frames]
-        predictions_per_patient  = [np.zeros(nframe,img_size,img_size) for nframe in num_frames]
-        ground_truth_per_patient = [np.zeros(nframe,img_size,img_size) for nframe in num_frames]
+        images_per_patient       = [np.zeros((nframe,img_size,img_size)) for nframe in num_frames]
+        predictions_per_patient  = [np.zeros((nframe,img_size,img_size)) for nframe in num_frames]
+        ground_truth_per_patient = [np.zeros((nframe,img_size,img_size)) for nframe in num_frames]
 
         with torch.no_grad():
             for _,batch in enumerate(tqdm_dataloader):  

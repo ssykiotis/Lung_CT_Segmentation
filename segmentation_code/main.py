@@ -40,6 +40,7 @@ if __name__ == "__main__":
     trainer   = Trainer(config,ds_parser)
 
     if config["mode"] =="train":
+        print('Training!')
         start = time()
         trainer.train()
         end = time()
@@ -47,9 +48,10 @@ if __name__ == "__main__":
 
         print('Training took {:.2f} minutes'.format(total))
         print(f'Best Epoch: {trainer.best_epoch}')
-
+        print('Testing!')
         trainer.test()
     else:
+        print('Testing!')
         trainer.test_per_patient()
 
 
