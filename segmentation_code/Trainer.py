@@ -181,7 +181,6 @@ class Trainer:
                 y_hat_post = torch.tensor(y_hat_post).to(torch.float32).to(self.config["device"])
                 y =  torch.tensor(y).to(torch.float32).to(self.config["device"])
 
-
                 f1      = F1_Score.update(y_hat_post,y)
                 f1_mean = F1_Score.compute()
 
@@ -220,6 +219,8 @@ class Trainer:
         F1_Score = BinaryF1Score().to(self.config["device"])
         Confusion_Matrix = BinaryConfusionMatrix().to(self.config["device"])
         self.test_dl = self.get_dataloader("test")
+        print('Xmin',self.test_dl.dataset.x_min)
+        print('Xmax',self.test_dl.dataset.x_max)
         img_names = self.test_dl.dataset.img_names
         results = pd.DataFrame(data    = None,
                                index   = img_names,
