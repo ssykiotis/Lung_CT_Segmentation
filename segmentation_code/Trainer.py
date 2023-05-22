@@ -154,8 +154,6 @@ class Trainer:
         predictions_per_patient  = [np.zeros((nframe,img_size,img_size)) for nframe in num_frames]
         ground_truth_per_patient = [np.zeros((nframe,img_size,img_size)) for nframe in num_frames]
 
-        print(num_frames)
-
         with torch.no_grad():
             for _,batch in enumerate(tqdm_dataloader):  
                 x, y, names,flag = batch      
@@ -169,8 +167,6 @@ class Trainer:
                     patient = patients.index(name.split('/')[0])
                     frame   = int(name.split('/')[1]) - 1
 
-                    print(patient,frame,i)
-
                     images_per_patient[patient][frame]       = x[i].detach().cpu().numpy()
                     predictions_per_patient[patient][frame]  = y_hat[i].detach().cpu().numpy()
                     ground_truth_per_patient[patient][frame] = y[i].detach().cpu().numpy()
@@ -180,7 +176,7 @@ class Trainer:
 
                 names = [f'patient/{i+1}' for i in range(x.shape[0])]
 
-                y_hat_post = postprocessing(y_hat)
+                y_hat_post = postprocessing(y_hat.astype(np.uint8))
                 f1      = F1_Score.update(y_hat_post, y)
                 f1_mean = F1_Score.compute()
 
