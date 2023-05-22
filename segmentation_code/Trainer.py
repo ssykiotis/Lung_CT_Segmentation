@@ -182,7 +182,8 @@ class Trainer:
 
                 self.export_images(x, y_hat_post, y, names)
 
-                tqdm_dataloader.set_description('Test, F1 {:.2f}'.format(f1_mean))
+                print(' Test, F2 {:.2f}'.format(f1_mean))
+
 
 
     def get_patient_frames(self,img_names:list):
