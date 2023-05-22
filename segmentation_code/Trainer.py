@@ -191,7 +191,7 @@ class Trainer:
         images['patient'] = images['img_names'].apply(lambda x:x.split('/')[0])
         images_grouped = images.groupby('patient').count().reset_index()
 
-        return images_grouped['patient'].values, images_grouped['img_names'].values
+        return images_grouped['patient'].values.tolist(), images_grouped['img_names'].values.tolist()
 
     def test(self):
 
