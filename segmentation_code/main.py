@@ -50,6 +50,6 @@ if __name__ == "__main__":
 
         trainer.test()
     else:
-        trainer.test()
+        trainer.test_per_patient()
 
 

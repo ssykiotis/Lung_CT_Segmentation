@@ -6,6 +6,8 @@ import numpy  as np
 import torch.utils.data as data_utils
 import torch.optim      as optim
 
+from lungmask.utils import postprocessing
+
 from Model                       import *
 from PIL                         import Image
 from tqdm                        import tqdm
@@ -129,6 +131,67 @@ class Trainer:
                 tqdm_dataloader.set_description('Validation, F1 {:.2f}, Loss {:.2f}'.format(f1_mean,loss_mean))
 
         return f1_mean, loss_mean
+    
+    def test_per_patient(self):
+
+        self.load_best_model()
+        self.model.eval()
+        F1_Score = BinaryF1Score().to(self.config["device"])
+        Confusion_Matrix = BinaryConfusionMatrix().to(self.config["device"])
+        self.test_dl = self.get_dataloader("test")
+        img_names = self.test_dl.dataset.img_names
+        results = pd.DataFrame(data    = None,
+                               index   = img_names,
+                               columns = ['tn', 'fp', 'fn', 'tp']
+                               )
+
+        tqdm_dataloader = tqdm(self.test_dl)
+
+        patients, num_frames = self.get_patient_frames(img_names)
+        img_size = self.config['img_size']
+
+        images_per_patient       = [np.zeros(nframe,img_size,img_size) for nframe in num_frames]
+        predictions_per_patient  = [np.zeros(nframe,img_size,img_size) for nframe in num_frames]
+        ground_truth_per_patient = [np.zeros(nframe,img_size,img_size) for nframe in num_frames]
+
+        with torch.no_grad():
+            for _,batch in enumerate(tqdm_dataloader):  
+                x, y, names,flag = batch      
+                x       = x.to(self.config["device"])
+                y       = y.to(self.config["device"]).to(torch.float32)                
+                
+                y_hat   = self.model(x)
+                y_hat   = torch.round(y_hat)
+
+                for i,name in enumerate(names):
+                    patient = patients.index(patient.split['/'][0])
+                    frame   = patient.split('/')[1] - 1
+
+                    predictions_per_patient[patient][frame]  = y_hat[i]
+                    ground_truth_per_patient[patient][frame] = y[i]
+            
+            for batch in zip(patients, images_per_patient, predictions_per_patient, ground_truth_per_patient):
+                patient, x, y_hat, y = batch
+
+                names = [f'patient/{i+1}' for i in range(x.shape[0])]
+
+                y_hat_post = postprocessing(y_hat)
+                f1      = F1_Score.update(y_hat_post, y)
+                f1_mean = F1_Score.compute()
+
+                self.export_images(x, y_hat_post, y, names)
+
+                tqdm_dataloader.set_description('Test, F1 {:.2f}'.format(f1_mean))
+
+
+    def get_patient_frames(self,img_names:list):
+        images = pd.DataFrame(data = img_names,
+                                 columns = ['img_names'])
+
+        images['patient'] = images['img_names'].apply(lambda x:x.split('/')[0])
+        images_grouped = images.groupby('patient').count().reset_index()
+
+        return images_grouped['patient'].values, images_grouped['img_names'].values
 
     def test(self):
 
