@@ -154,6 +154,8 @@ class Trainer:
         predictions_per_patient  = [np.zeros((nframe,img_size,img_size)) for nframe in num_frames]
         ground_truth_per_patient = [np.zeros((nframe,img_size,img_size)) for nframe in num_frames]
 
+        print(num_frames)
+
         with torch.no_grad():
             for _,batch in enumerate(tqdm_dataloader):  
                 x, y, names,flag = batch      
@@ -163,10 +165,13 @@ class Trainer:
                 y_hat   = self.model(x)
                 y_hat   = torch.round(y_hat)
 
-                for i,name in enumerate(names):
+                for i, name in enumerate(names):
                     patient = patients.index(name.split('/')[0])
                     frame   = int(name.split('/')[1]) - 1
+                    
+                    print(patient,frame,i)
 
+                    images_per_patient[patient][frame]       = x[i]
                     predictions_per_patient[patient][frame]  = y_hat[i]
                     ground_truth_per_patient[patient][frame] = y[i]
             
