@@ -164,6 +164,7 @@ class Trainer:
                 y_hat   = torch.round(y_hat)
 
                 for i,name in enumerate(names):
+                    print(name)
                     patient = patients.index(name.split['/'][0])
                     frame   = patient.split('/')[1] - 1
 
