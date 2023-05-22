@@ -139,6 +139,8 @@ class Trainer:
         F1_Score = BinaryF1Score().to(self.config["device"])
         Confusion_Matrix = BinaryConfusionMatrix().to(self.config["device"])
         self.test_dl = self.get_dataloader("test")
+        print('Xmin',self.test_dl.dataset.x_min)
+        print('Xmax',self.test_dl.dataset.x_max)
         img_names = self.test_dl.dataset.img_names
         results = pd.DataFrame(data    = None,
                                index   = img_names,
@@ -196,7 +198,7 @@ class Trainer:
 
                 self.export_images(x, y_hat_post, y, names)
 
-                print(' Test, F2 {:.2f}'.format(f1_mean))
+                print(' Test, F1 {:.2f}'.format(f1_mean))
         results.to_csv(f'{self.export_root}/results.csv')
 
 
@@ -219,8 +221,7 @@ class Trainer:
         F1_Score = BinaryF1Score().to(self.config["device"])
         Confusion_Matrix = BinaryConfusionMatrix().to(self.config["device"])
         self.test_dl = self.get_dataloader("test")
-        print('Xmin',self.test_dl.dataset.x_min)
-        print('Xmax',self.test_dl.dataset.x_max)
+
         img_names = self.test_dl.dataset.img_names
         results = pd.DataFrame(data    = None,
                                index   = img_names,
