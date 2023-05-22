@@ -178,7 +178,7 @@ class Trainer:
 
                 y_hat_post = postprocessing(y_hat.astype(np.uint8))
 
-                y_hat_post = torch.tensor(y_hat_post.to(torch.float32))
+                y_hat_post = torch.tensor(y_hat_post).to(torch.float32)
                 y =  torch.tensor(y).to(torch.float32)
 
 
