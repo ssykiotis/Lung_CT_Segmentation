@@ -177,8 +177,23 @@ class Trainer:
                 names = [f'{patient}/{i+1}' for i in range(x.shape[0])]
 
                 y_hat_post = postprocessing(y_hat.astype(np.uint8))
-                f1      = F1_Score.update(torch.tensor(y_hat_post).to(torch.float32), torch.tensor(y).to(torch.float32))
+
+                y_hat_post = torch.tensor(y_hat_post.to(torch.float32))
+                y =  torch.tensor(y).to(torch.float32)
+
+
+                f1      = F1_Score.update(y_hat_post,y)
                 f1_mean = F1_Score.compute()
+
+                for i in range(y_hat_post.shape[0]):
+                    c  = Confusion_Matrix(y_hat_post[i],y[i])
+                    tn = c[0,0].detach().cpu().numpy().item()
+                    fp = c[0,1].detach().cpu().numpy().item()
+                    fn = c[1,0].detach().cpu().numpy().item()
+                    tp = c[1,1].detach().cpu().numpy().item()
+
+                    results.loc[names[i]] = (tn, fp, fn, tp)
+
 
                 self.export_images(x, y_hat_post, y, names)
 
