@@ -177,7 +177,7 @@ class Trainer:
                 names = [f'patient/{i+1}' for i in range(x.shape[0])]
 
                 y_hat_post = postprocessing(y_hat.astype(np.uint8))
-                f1      = F1_Score.update(y_hat_post, y)
+                f1      = F1_Score.update(torch.tensor(y_hat_post).to(torch.float32), torch.tensor(y).to(torch.float32))
                 f1_mean = F1_Score.compute()
 
                 self.export_images(x, y_hat_post, y, names)
