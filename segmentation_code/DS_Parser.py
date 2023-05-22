@@ -44,7 +44,7 @@ class DataParser:
             if mode=='val':
                 x, y, img_names, flags = self.parse_patients(self.val_patients, keeponly = True)
             else:
-                x, y, img_names, flags = self.parse_patients(self.test_patients, keeponly = True)
+                x, y, img_names, flags = self.parse_patients(self.test_patients, keeponly = False)
 
             x_train, _, _, _ = self.parse_patients(self.train_patients, keeponly = True)
             self.x_min = np.min(x_train)
