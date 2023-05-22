@@ -290,9 +290,9 @@ class Trainer:
 
     def export_images(self,x,y_hat,y,img_names):
 
-        x     = x.detach().cpu().numpy().squeeze()
-        y_hat = y_hat.detach().cpu().numpy().squeeze()
-        y     = y.detach().cpu().numpy().squeeze()
+        x     = x.detach().cpu().numpy().squeeze() if torch.is_tensor(x) else x
+        y_hat = y_hat.detach().cpu().numpy().squeeze() if torch.is_tensor(y_hat) else y_hat
+        y     = y.detach().cpu().numpy().squeeze() if torch.is_tensor(y) else y
 
         imgs_path = f'{self.export_root}/imgs'
         if not os.path.exists(imgs_path):
