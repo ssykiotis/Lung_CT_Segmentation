@@ -174,7 +174,7 @@ class Trainer:
             for batch in zip(patients, images_per_patient, predictions_per_patient, ground_truth_per_patient):
                 patient, x, y_hat, y = batch
 
-                names = [f'patient/{i+1}' for i in range(x.shape[0])]
+                names = [f'{patient}/{i+1}' for i in range(x.shape[0])]
 
                 y_hat_post = postprocessing(y_hat.astype(np.uint8))
                 f1      = F1_Score.update(torch.tensor(y_hat_post).to(torch.float32), torch.tensor(y).to(torch.float32))
