@@ -70,7 +70,7 @@ class DataParser:
                 img_names: list image names
         """
 
-        instance_seg_model = mask.get_model('unet','R231CovidWeb')
+        instance_seg_model = mask.get_model('R231CovidWeb')
         instance_seg_model = instance_seg_model.to('cuda:0')
 
         x, y ,img_names, flags = [], [], [], []
@@ -120,9 +120,9 @@ class DataParser:
             else:
                 flag = (np.unique(lung_seg).tolist()==[0,1,2])*1
             lung_seg[lung_seg>0] = 1
+
             max_values = np.amax(lung_seg)
-            
-            result = np.where(lung_seg == max_values)
+            result     = np.where(lung_seg == max_values)
             x1 = np.min(result[0]) - self.config["crop_buffer"]
             x2 = np.max(result[0]) + self.config["crop_buffer"]
             y1 = np.min(result[1]) - self.config["crop_buffer"]

@@ -139,8 +139,7 @@ class Trainer:
         F1_Score = BinaryF1Score().to(self.config["device"])
         Confusion_Matrix = BinaryConfusionMatrix().to(self.config["device"])
         self.test_dl = self.get_dataloader("test")
-        print('Xmin',self.test_dl.dataset.x_min)
-        print('Xmax',self.test_dl.dataset.x_max)
+
         img_names = self.test_dl.dataset.img_names
         results = pd.DataFrame(data    = None,
                                index   = img_names,
@@ -200,9 +199,6 @@ class Trainer:
 
                 print(' Test, F1 {:.2f}'.format(f1_mean))
         results.to_csv(f'{self.export_root}/results.csv')
-
-
-
 
     def get_patient_frames(self,img_names:list):
         images = pd.DataFrame(data = img_names,
@@ -341,7 +337,7 @@ class Trainer:
             B       = mask_gt*255
             mask_rgb = np.stack((R,G,B), axis=2)
 
-            png_mask = Image.fromarray(mask_rgb,mode = 'RGB')
+            png_mask = Image.fromarray(mask_rgb, mode = 'RGB')
             mask_path = f'{patient_folder}/{img_num}_masks.png'
             # png_mask.save(mask_path)
 
