@@ -42,7 +42,7 @@ class DataParser:
             self.x_min, self.x_max = dataset.get_minmax()
         else:
             if mode=='val':
-                x, y, img_names, flags = self.parse_patients(self.val_patients, keeponly = True)
+                x, y, img_names, flags = self.parse_patients(self.val_patients, keeponly = False)
             else:
                 x, y, img_names, flags = self.parse_patients(self.test_patients, keeponly = False)
 
