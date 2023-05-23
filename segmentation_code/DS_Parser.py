@@ -70,7 +70,7 @@ class DataParser:
                 img_names: list image names
         """
 
-        instance_seg_model = mask.get_model('R231CovidWeb')
+        instance_seg_model = mask.get_model('unet','R231CovidWeb')
         instance_seg_model = instance_seg_model.to('cuda:0')
 
         x, y ,img_names, flags = [], [], [], []
