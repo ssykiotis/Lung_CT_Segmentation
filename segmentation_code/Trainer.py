@@ -140,6 +140,9 @@ class Trainer:
         Confusion_Matrix = BinaryConfusionMatrix().to(self.config["device"])
         self.test_dl = self.get_dataloader("test")
 
+        print('Xmin', self.test_dl.dataset.x_min)
+        print('Xmax', self.test_dl.dataset.x_max)
+
         img_names = self.test_dl.dataset.img_names
         results = pd.DataFrame(data    = None,
                                index   = img_names,
