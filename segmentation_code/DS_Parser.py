@@ -70,7 +70,7 @@ class DataParser:
                 img_names: list image names
         """
 
-        instance_seg_model = mask.get_model('LTRCLobes')
+        instance_seg_model = mask.get_model('LTRCLobes',n_classes =6)
         instance_seg_model = instance_seg_model.to('cuda:0')
 
         x, y ,img_names, flags = [], [], [], []
