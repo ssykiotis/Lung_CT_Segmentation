@@ -119,7 +119,7 @@ class Patient:
         #     lung_seg = res.segment_data(lung_idxs[0]) 
         # else:
         
-        lung_seg = mask.apply(self.imgs.astype(np.float32), self.lung_seg_model, batch_size = 32, tqdm_disable = False)
+        lung_seg = mask.apply(self.imgs.astype(np.float32), self.lung_seg_model, batch_size = 32)
 
         # lung_seg[lung_seg!=0] = 1
 
